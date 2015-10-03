@@ -1,0 +1,18 @@
+<!-- /album -->
+{% extends "index.html" %}
+{% block content %}
+	<form action="/ilrj0i/pa1/album/edit" method="get">
+		<input type="hidden" name="id" value="{{albumid}}">
+		<input type="submit" value="Edit Album">
+	</form>
+	{% for pic in pics %}
+	<!-- ordered by sequencenum -->
+		<form action="/ilrj0i/pa1/pic" method="get">
+			<input type="hidden" name="id" value="{{pic[0]}}">
+			<input type="hidden" name="albid" value="{{albumid}}">
+			<!--<input type="hidden" name="doit" value="false"}-->
+			<p>Date: {{pic[3]}}</p>
+			<input type="image" src="/images/{{pic[1]}}" height="70" width="70">
+		</form>
+	{% endfor %}
+{% endblock %}

@@ -1,0 +1,12 @@
+<!-- /pic -->
+{% extends "index.html" %}
+{% block content %}
+	<form action="/ilrj0i/pa1/album/edit" method="get">
+		<input type="hidden" name="id" value="{{albumid}}">
+		<input type="submit" value="Edit Album">
+	</form>
+	{% for pic in picarr %}
+		<img src="/images/{{pic[1]}}"/>
+	{% endfor %}
+{% endblock %}
+

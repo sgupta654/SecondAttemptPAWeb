@@ -1,0 +1,36 @@
+<!-- albums/edit -->
+{% extends "index.html" %}
+{% block content %}
+<table class="table">
+	{% for album in albums %}
+	<tr>
+		<td>{{album[1]}}</td>
+		<td>
+			<form action="/ilrj0i/pa1/album/edit" method="get">
+				<input type="hidden" name="op" value="delete">
+				<input type="hidden" name="id" value="{{album[0]}}">
+				<input type="hidden" name="username" value="{{username}}"> <!--???-->
+				<input type="submit" value="edit">
+			</form>
+		</td>
+		<td>
+			<form action="/ilrj0i/pa1/albums/edit" method="post">
+				<input type="hidden" name="op" value="delete">
+				<input type="hidden" name="albumid" value="{{album[0]}}">
+				<input type="hidden" name="username" value="{{username}}"> <!--???-->
+				<input type="submit" value="delete">
+			</form>
+		</td>
+	</tr>
+	{% endfor %}
+	<tr>
+		<form action="/ilrj0i/pa1/albums/edit" method="post">
+			<input type="hidden" name="op" value="add">
+			<input type="hidden" name="username" value="{{username}}">
+			<td>New: <input type="text" name="title"></td>
+			<td><input type="submit" value="ADD!"></td>
+		</form>
+
+	</tr>
+</table>
+{% endblock %}

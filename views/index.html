@@ -1,0 +1,24 @@
+<!-- / -->
+<!DOCTYPE HTML>
+<html lang="en">
+<head>
+	<link rel="stylesheet" href="/static/css/bootstrap.css">
+	<title>Photo Album Project</title>
+</head>
+<body>
+<div class="page-header">
+	<h1>Welcome to our album project.</h1>
+</div>
+{% block content %}
+	<p>This project allows users to view, edit, and delete picture albums.</p>
+	{% for user in users %} 
+		<form action="/ilrj0i/pa1/albums" method="GET">
+			<input type="submit" name="username" value="{{user[0]}}">
+		</form>
+	{% endfor %}
+{% endblock %}
+<footer>
+	<p>Fall 2015. Andrew Chen | Sandeep Gupta | Brian Lim</p>
+</footer>
+</body>
+</html>

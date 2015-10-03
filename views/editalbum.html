@@ -1,0 +1,33 @@
+<!-- album/edit -->
+{% extends "index.html" %}
+{% block content %}
+<table class="table">
+	{% for pic in pics %}
+	<tr>
+		<td>
+			<img src="/images/{{pic[1]}}" height="70" width="70"/>
+		</td>
+		<td>
+			<form action="/ilrj0i/pa1/album/edit" method="post" >
+				<input type="hidden" name="op" value="delete">
+				<input type="hidden" name="albumid" value="{{albumid}}">
+				<input type="hidden" name="picid" value="{{pic[0]}}">
+				<input type="submit" value="delete">
+			</form>
+		</td>
+	</tr>
+	{% endfor %}
+	<tr>
+		<td>
+			<title>Upload new File</title>
+			<h1>Upload new File</h1>
+			<form action="/ilrj0i/pa1/album/edit" method="post" enctype="multipart/form-data">
+		  	<input type="file" name="file">
+	 	 		<input type="hidden" name="op" value="add">
+	  		<input type="hidden" name="albumid" value="{{albumid}}">
+	  		<input type="submit" value="Add!!!!">
+			</form>
+		</td>
+	</tr>
+</table>
+{% endblock %}
