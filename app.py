@@ -13,9 +13,9 @@ ALLOWED_EXTENSIONS = set(['jpg', 'png', 'bmp', 'gif'])
 app = Flask(__name__, template_folder='views', static_folder='images')
 mysql = MySQL()
 app.config['MYSQL_USER'] = 'root'
-app.config['MYSQL_PASSWORD'] = 'root'
+app.config['MYSQL_PASSWORD'] = 'Natal13!'
 app.config['MYSQL_HOST'] = 'localhost'
-app.config['MYSQL_DB'] = 'group36'
+app.config['MYSQL_DB'] = 'group36pa2'
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 mysql.init_app(app)
 
@@ -32,7 +32,7 @@ def main_route():
 	users = cursor.fetchall()
 	return render_template("index.html", users = users)
 	"""
-	
+
 
 	cursor = mysql.connection.cursor()
 	query = '''SELECT * FROM Album WHERE access="public"'''
@@ -44,7 +44,7 @@ def main_route():
 			logout()
 		session['lastactivity'] = datetime.datetime.now()
 		username = session['username']
-		query =  '''SELECT * FROM Album INNER JOIN AlbumAccess ON AlbumAccess.albumid=Album.albumid WHERE AlbumAccess.username=''' + "'" + username = "'"
+		query =  '''SELECT * FROM Album INNER JOIN AlbumAccess ON AlbumAccess.albumid=Album.albumid WHERE AlbumAccess.username=''' + "'" + username + "'"
 		cursor.execute(query)
 		#######own albums?
 		albumsadd = cursor.fetchall()
