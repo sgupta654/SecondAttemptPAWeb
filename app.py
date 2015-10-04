@@ -207,7 +207,7 @@ def editalbum():
 		albumid = request.form['albumid']
 		username = request.form['username']
 		cursor = mysql.connection.cursor()
-		query = '''INSERT INTO AlbumAccess (albumid, username) VALUES (''' + "'" + albumid + "','" + username + "')" 
+		query = '''INSERT INTO AlbumAccess (albumid, username) VALUES (''' + "'" + albumid + "','" + username + "')"
 		cursor.execute(query)
 		mysql.connection.commit()
 		query = '''SELECT username FROM AlbumAccess WHERE albumid=''' + "'" + albumid + "'"
@@ -306,7 +306,7 @@ def viewalbum():
 	#return render_template("editalbum.html", pics = pics, pics_in_album = pics_in_album, albumid = albumid)
 
 if __name__ == '__main__':
-	app.run()
+	app.run(debug=True)
 		# listen on external IPs
 		#app.run(host='localhost', port=5636, port=5736, debug=True)
 
