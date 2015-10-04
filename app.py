@@ -49,7 +49,7 @@ def main_route():
 		#######own albums?
 		albumsadd = cursor.fetchall()
 		albums = albums + albumsadd
-		####login yes = html will load the navbar
+		####login yes = html will load the "logged in as" navbar
 		return render_template("index.html", albums = albums, username = username, login = "yes")
 	return render_template("index.html", albums = albums, login = "no")
 
