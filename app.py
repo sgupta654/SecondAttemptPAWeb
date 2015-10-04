@@ -99,8 +99,9 @@ def editalbums():
 		lastupdated = str(datetime.now().date())
 		username = request.form['username']
 		title = request.form['title']
+		access = request.form['access']
 		cursor = mysql.connection.cursor()
-		query = '''INSERT INTO Album (title, created, lastupdated, username) VALUES (''' + "'" + title + "', '" + created + "', '" + lastupdated + "', '" + username + "')"
+		query = '''INSERT INTO Album (title, created, lastupdated, username, access) VALUES (''' + "'" + title + "', '" + created + "', '" + lastupdated + "', '" + username + "', '" + access + "')"
 		cursor.execute(query)
 		mysql.connection.commit()
 		query = '''SELECT * FROM Album WHERE username=''' + "'" + username + "'"
