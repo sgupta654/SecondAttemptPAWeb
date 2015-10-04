@@ -8,7 +8,7 @@
 			<img src="/images/{{pic[1]}}" height="70" width="70"/>
 		</td>
 		<td>
-			<form action="/ilrj0i/pa1/album/edit" method="post" >
+			<form action="/album/edit" method="post" >
 				<input type="hidden" name="op" value="delete">
 				<input type="hidden" name="albumid" value="{{albumid}}">
 				<input type="hidden" name="picid" value="{{pic[0]}}">
@@ -21,7 +21,7 @@
 		<td>
 			<title>Upload new File</title>
 			<h1>Upload new File</h1>
-			<form action="/ilrj0i/pa1/album/edit" method="post" enctype="multipart/form-data">
+			<form action="/album/edit" method="post" enctype="multipart/form-data">
 		  	<input type="file" name="file">
 	 	 		<input type="hidden" name="op" value="add">
 	  		<input type="hidden" name="albumid" value="{{albumid}}">

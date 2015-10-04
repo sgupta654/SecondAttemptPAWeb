@@ -12,7 +12,7 @@
 {% block content %}
 	<p>This project allows users to view, edit, and delete picture albums.</p>
 	{% for user in users %} 
-		<form action="/ilrj0i/pa1/albums" method="GET">
+		<form action="/albums" method="GET">
 			<input type="submit" name="username" value="{{user[0]}}">
 		</form>
 	{% endfor %}

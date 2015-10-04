@@ -6,7 +6,7 @@
 	<tr>
 		<td>{{album[1]}}</td>
 		<td>
-			<form action="/ilrj0i/pa1/album/edit" method="get">
+			<form action="/album/edit" method="get">
 				<input type="hidden" name="op" value="delete">
 				<input type="hidden" name="id" value="{{album[0]}}">
 				<input type="hidden" name="username" value="{{username}}"> <!--???-->
@@ -14,7 +14,7 @@
 			</form>
 		</td>
 		<td>
-			<form action="/ilrj0i/pa1/albums/edit" method="post">
+			<form action="/albums/edit" method="post">
 				<input type="hidden" name="op" value="delete">
 				<input type="hidden" name="albumid" value="{{album[0]}}">
 				<input type="hidden" name="username" value="{{username}}"> <!--???-->
@@ -24,7 +24,7 @@
 	</tr>
 	{% endfor %}
 	<tr>
-		<form action="/ilrj0i/pa1/albums/edit" method="post">
+		<form action="/albums/edit" method="post">
 			<input type="hidden" name="op" value="add">
 			<input type="hidden" name="username" value="{{username}}">
 			<td>New: <input type="text" name="title"></td>
