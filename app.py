@@ -44,8 +44,13 @@ def main_route():
 			logout()
 		session['lastactivity'] = datetime.datetime.now()
 		username = session['username']
+		query =  '''SELECT * FROM Album INNER JOIN AlbumAccess ON AlbumAccess.albumid=Album.albumid WHERE AlbumAccess.username=''' + "'" + username = "'"
+		cursor.execute(query)
+		#######own albums?
+		albumsadd = cursor.fetchall()
+		albums = albums + albumsadd
 		####login yes = html will load the navbar
-		return render_template("index.html", username = username, login = "yes")
+		return render_template("index.html", albums = albums, username = username, login = "yes")
 	return render_template("index.html", albums = albums, login = "no")
 
 #if op==signin
@@ -53,7 +58,7 @@ def main_route():
 
 
 
-@app.route('/ilrj0i/pa1/user')
+@app.route('/ilrj0i/pa1/user', methods=['GET'])
 def signup():
 	if 'username' in session:
 		if datetime.datetime.now() - session['lastactivity'] > datetime.timedelta(minutes=5):
@@ -61,9 +66,30 @@ def signup():
 			logout()
 		session['lastactivity'] = datetime.datetime.now()
 		username = session['username']
-		return render_template("edituser.html", username = username)
-	return render_template("user.html")
+		return render_template("edituser.html", username = username, login = "yes")
+	return render_template("user.html", login = "no")
 
+@app.route('/ilrj0i/pa1/user', methods=['POST'])
+def createaccount():
+	username = request.form['username']
+	firstname = request.form['firstname']
+	lastname = request.form['lastname']
+	password = request.form['password']
+	email = request.form['email']
+	#####check if username already exists
+	cursor = mysql.connection.cursor()
+	query = '''SELECT username FROM User WHERE username=''' + "'" + username + "'"
+	cursor.execute(query)
+	user = cursor.fetchall()
+	if len(user) > 0:
+		return render_template("user.html")
+	query = '''INSERT INTO User VALUES (''' + "'" + username + "', '" + firstname + "', '" + lastname + "', '" + password + "', '" + email + "')"
+	cursor.execute(query)
+	mysql.connection.commit()
+	query = '''SELECT * FROM Album WHERE access="public"'''
+	cursor.execute(query)
+	albums = cursor.fetchall()
+	return render_template("index.html", albums = albums)
 
 
 @app.route('/ilrj0i/pa1/user/edit', methods=['GET'])
@@ -91,7 +117,10 @@ def userloginget():
 def userloginpost():
 	session['username'] = request.form['username']
 	session['lastactivity'] = datetime.now().time()
-	return render_template("index.html")
+	query = '''SELECT * FROM Album WHERE access="public"'''
+	cursor.execute(query)
+	albums = cursor.fetchall()
+	return render_template("index.html", albums = albums)
 
 @app.route('/ilrj0i/pa1/user/delete', methods=['POST'])
 def deleteuser():
