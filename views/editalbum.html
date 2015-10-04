@@ -2,6 +2,38 @@
 {% extends "index.html" %}
 {% block content %}
 <table class="table">
+	<tr>
+		<td>
+			<p>Username</p>
+		</td>
+		<td>
+			<p>Update Access</p>
+		</td>
+	</tr>
+	{% for accessor in accessors %}
+	<tr>
+		<td>
+			<p>{{accessor[0]}}</p>
+		</td>
+		<td>
+			<form action="/album/edit" method="post">
+				<input type="hidden" name="op" value="revokeaccess">
+				<input type="hidden" name="albumid" value="{{albumid}}">
+				<input type="hidden" name="username" value="{{accessor[0]}}">
+				<input type="submit" value="Revoke">
+			</form>
+		</td>
+	</tr>
+	{% endfor %}
+	<tr>
+		<form action="/album/edit" method="post">
+			<input type="hidden" name="op" value="addaccess">
+			<input type="hidden" name="albumid" value="{{albumid}}">
+			<input type="hidden" name="username" value="{{accessor[0]}}">
+			<input type="submit" name="Add">
+		</form>
+	<tr>
+
 	{% for pic in pics %}
 	<tr>
 		<td>

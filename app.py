@@ -149,17 +149,50 @@ def secure_filename(filename):
 
 @app.route('/ilrj0i/pa1/album/edit', methods=['POST'])
 def editalbum():
+	if (request.form['op'] == 'revokeaccess'):
+		albumid = request.form['albumid']
+		username = request.form['username']
+		cursor = mysql.connection.cursor()
+		query = '''DELETE FROM AlbumAccess WHERE username=''' + "'" + username + "'"
+		cursor.execute(query)
+		mysql.connection.commit()
+		query = '''SELECT username FROM AlbumAccess WHERE albumid=''' + "'" + albumid + "'"
+		cursor.execute(query)
+		accessors = cursor.fetchall()
+		query = '''SELECT * FROM Photo INNER JOIN Contain ON Contain.picid=Photo.picid WHERE Contain.albumid=''' + "'" + albumid + "'"
+		cursor.execute(query)
+		pics = cursor.fetchall()
+		return render_template("editalbum.html", pics = pics, albumid = albumid, accessors = accessors)
+
+	if (request.form['op'] == 'addaccess'):
+		albumid = request.form['albumid']
+		username = request.form['username']
+		cursor = mysql.connection.cursor()
+		query = '''INSERT INTO AlbumAccess VALUES (''' + "'" + albumid "', '"+ username + "')" 
+		cursor.execute(query)
+		mysql.connection.commit()
+		query = '''SELECT username FROM AlbumAccess WHERE albumid=''' + "'" + albumid + "'"
+		cursor.execute(query)
+		accessors = cursor.fetchall()
+		query = '''SELECT * FROM Photo INNER JOIN Contain ON Contain.picid=Photo.picid WHERE Contain.albumid=''' + "'" + albumid + "'"
+		cursor.execute(query)
+		pics = cursor.fetchall()
+		return render_template("editalbum.html", pics = pics, albumid = albumid, accessors = accessors)
+
 	if (request.form['op'] == 'delete'):
 		albumid = request.form['albumid']
 		returnpicid = request.form['picid']
 		cursor = mysql.connection.cursor()
+		query = '''SELECT username FROM AlbumAccess WHERE albumid=''' + "'" + albumid + "'"
+		cursor.execute(query)
+		accessors = cursor.fetchall()
 		query = '''DELETE FROM Photo WHERE picid=''' + "'" + returnpicid + "'"#INNER JOIN Contain ON Contain.picid=Photo.picid WHERE Contain.picid=''' + "'" + picid + "'"#'''' AND Contain.albumid=''' + "'" + albumid + "'"
 		cursor.execute(query)
 		mysql.connection.commit()
 		query = '''SELECT * FROM Photo INNER JOIN Contain ON Contain.picid=Photo.picid WHERE Contain.albumid=''' + "'" + albumid + "'"
 		cursor.execute(query)
 		pics = cursor.fetchall()
-		return render_template("editalbum.html", pics = pics, albumid = albumid)
+		return render_template("editalbum.html", pics = pics, albumid = albumid, accessors = accessors)
 
 	if (request.form['op'] == 'add'):
 		file = request.files['file']
@@ -173,6 +206,10 @@ def editalbum():
 			url = str(picid + "." + format)
 			date = str(datetime.now().date())
 			cursor = mysql.connection.cursor()
+
+			query = '''SELECT username FROM AlbumAccess WHERE albumid=''' + "'" + albumid + "'"
+			cursor.execute(query)
+			accessors = cursor.fetchall()
 
 			albumid = str(request.form['albumid'])
 			#print picid
@@ -197,7 +234,7 @@ def editalbum():
 			pics = cursor.fetchall()
 			#import pdb; pdb.set_trace()
 			mysql.connection.commit()
-			return render_template("editalbum.html", pics = pics)
+			return render_template("editalbum.html", pics = pics, albumid = albumid, accessors = accessors)
 
 
 		#return render_template("test.html", picid = picid, albumid = albumid, pics = pics)
@@ -208,6 +245,12 @@ def editalbum():
 def viewalbum():
 	albumid = request.args.get('id')
 	cursor = mysql.connection.cursor()
+
+	#access stuff
+	query = '''SELECT username FROM AlbumAccess WHERE albumid=''' + "'" + albumid + "'"
+	cursor.execute(query)
+	accessors = cursor.fetchall()
+
 	query = '''SELECT * FROM Photo INNER JOIN Contain ON Contain.picid=Photo.picid WHERE Contain.albumid=''' + "'" + albumid + "'"
 	cursor.execute(query)
 	pics = cursor.fetchall()
@@ -220,7 +263,7 @@ def viewalbum():
 	#	cursor.execute(query)
 	#	picsssss = cursor.fetchall()
 	#	pics.append(picsssss[0])
-	return render_template("editalbum.html", pics = pics, albumid = albumid)
+	return render_template("editalbum.html", pics = pics, albumid = albumid, accessors = accessors)
 	#return render_template("editalbum.html", pics = pics, pics_in_album = pics_in_album, albumid = albumid)
 
 if __name__ == '__main__':
