@@ -25,21 +25,48 @@ def main_route():
 	#app = current_app._get_current_object()
 	# The following code gets the mysql object from app and creates a connection/cursor
 	#connection = app.mysql.connect()
+	"""
 	cursor = mysql.connection.cursor()
 	cursor.execute('''SELECT * FROM User''')
 	users = cursor.fetchall()
 	return render_template("index.html", users = users)
-"""
+	"""
+
+	cursor = mysql.connection.cursor()
+	query = '''SELECT * FROM Album WHERE access="public"'''
+	cursor.execute(query)
+	albums = cursor.fetchall()
+	return render_template("index.html", albums = albums)
+
+#if op==signin
+#OTHER AUTHENTICATION SHIT!!!
+
 @app.route('/ilrj0i/pa1/user')
 def signup():
+	return render_template("user.html")
 
-@app.route('/ilrj0i/pa1/user/edit')
-def edituser():
+
+
+@app.route('/ilrj0i/pa1/user/edit', methods=['GET'])
+def edituserget():
+	return render_template("edituser.html", username = username)
+
+@app.route('/ilrj0i/pa1/user/edit', methods=['POST'])
+def edituserpost():
+	username = request.form['username']
+	firstname = request.form['firstname']
+	lastname = request.form['lastname']
+	password = request.form['password']
+	email = request.form['email']
+	cursor = mysql.connection.cursor()
+	query = '''UPDATE USER SET firstname=''' + "'" + firstname + "', lastname=" + "'" + lastname + "', password=" + "'" + password + "', email=" + "'" + email + "' WHERE username=" + "'" + username + "'"
+	cursor.execute(query)
+	mysql.connection.commit()
+	return render_template("edituser.html", username = username)
 
 @app.route('/ilrj0i/pa1/user/login')
 def userlogin():
-
-"""
+	return render_template("login.html")
 
 @app.route('/ilrj0i/pa1/albums')
 def albumsss():
