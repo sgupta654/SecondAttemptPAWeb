@@ -8,11 +8,11 @@ INSERT INTO User (username, firstname, lastname, password, email)
 INSERT INTO User (username, firstname, lastname, password, email)
   VALUES ('spacejunkie', 'Bob', 'Spacey', 'xX420blaze_itXx', 'bspace@spacejunkies.net');
 
-INSERT INTO Album (title, created, lastupdated, username)
-  VALUES ('I love sports', '2014-09-15', '2015-09-15', 'sportslover'),
-  ('I love football', '2001-10-25', '2012-04-20', 'sportslover'),
-  ('Around The World', '2004-03-13', '2007-07-30', 'traveler'),
-  ('Cool Space Shots', '2003-08-02', '2010-11-14', 'spacejunkie');
+INSERT INTO Album (title, created, lastupdated, username, access)
+  VALUES ('I love sports', '2014-09-15', '2015-09-15', 'sportslover', 'public'),
+  ('I love football', '2001-10-25', '2012-04-20', 'sportslover', 'private'),
+  ('Around The World', '2004-03-13', '2007-07-30', 'traveler', 'private'),
+  ('Cool Space Shots', '2003-08-02', '2010-11-14', 'spacejunkie', 'private');
 
 INSERT INTO Photo (picid, url, format, date)
 VALUES ('football_s1', 'football_s1.jpg', 'jpg', '2015-09-18'),
@@ -77,3 +77,11 @@ VALUES (1, 'sports_s1', 'sports', 0),
 (4, 'space_HelixNebula', 'Space', 2),
 (4, 'space_MilkyWay', 'Space', 3),
 (4, 'space_OrionNebula', 'Space', 4);
+
+INSERT INTO AlbumAccess (albumid, username)
+VALUES (1, 'traveler'),
+(1, 'spacejunkie'),
+(2, 'traveler'),
+(3, 'sportslover'),
+(3, 'spacejunkie'),
+(4, 'sportslover');

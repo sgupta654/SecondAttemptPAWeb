@@ -10,12 +10,31 @@
 	<h1>Welcome to our album project.</h1>
 </div>
 {% block content %}
+	<h1>Welcome!</h1>
 	<p>This project allows users to view, edit, and delete picture albums.</p>
-	{% for user in users %} 
-		<form action="/albums" method="GET">
-			<input type="submit" name="username" value="{{user[0]}}">
-		</form>
+	<br>
+	<p>Log in <a href="/ilrj0i/pa1/user/login">here</a></p>
+	<br>
+	<p>Sign up <a href="/ilrj0i/pa1/user">here</a></p>
+	<br>
+	<table class="table">
+		<tr>
+			<td>Album</td>
+			<td>Name</td>
+		<tr>
+	{% for album in albums %} 
+		<tr>
+			<td>{{album[4]}}</td>
+			<td>{{album[1]}}</td>
+			<td>
+				<form action="/ilrj0i/pa1/album" method="GET">
+					<input type="hidden" name="id" value="{{album[0]}}">
+					<input type="submit" value="Check it out!">
+				</form>
+			<td>
+		</tr>
 	{% endfor %}
+	</table>
 {% endblock %}
 <footer>
 	<p>Fall 2015. Andrew Chen | Sandeep Gupta | Brian Lim</p>

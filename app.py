@@ -3,6 +3,7 @@ from flask_mysqldb import MySQL
 from datetime import datetime
 
 import os.path
+#import os.urandom
 
 #path to the images folder to store uploaded pictures
 UPLOAD_FOLDER = 'images/'
@@ -11,8 +12,8 @@ ALLOWED_EXTENSIONS = set(['jpg', 'png', 'bmp', 'gif'])
 
 app = Flask(__name__, template_folder='views', static_folder='images')
 mysql = MySQL()
-app.config['MYSQL_USER'] = 'group36'
-app.config['MYSQL_PASSWORD'] = 'GOOCH'
+app.config['MYSQL_USER'] = 'root'
+app.config['MYSQL_PASSWORD'] = 'my_password'
 app.config['MYSQL_HOST'] = 'localhost'
 app.config['MYSQL_DB'] = 'group36'
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
@@ -25,10 +26,123 @@ def main_route():
 	#app = current_app._get_current_object()
 	# The following code gets the mysql object from app and creates a connection/cursor
 	#connection = app.mysql.connect()
+	"""
 	cursor = mysql.connection.cursor()
 	cursor.execute('''SELECT * FROM User''')
 	users = cursor.fetchall()
 	return render_template("index.html", users = users)
+	"""
+	
+
+	cursor = mysql.connection.cursor()
+	query = '''SELECT * FROM Album WHERE access="public"'''
+	cursor.execute(query)
+	albums = cursor.fetchall()
+	if 'username' in session:
+		if datetime.datetime.now() - session['lastactivity'] > datetime.timedelta(minutes=5):
+			##############logout
+			logout()
+		session['lastactivity'] = datetime.datetime.now()
+		username = session['username']
+		query =  '''SELECT * FROM Album INNER JOIN AlbumAccess ON AlbumAccess.albumid=Album.albumid WHERE AlbumAccess.username=''' + "'" + username = "'"
+		cursor.execute(query)
+		#######own albums?
+		albumsadd = cursor.fetchall()
+		albums = albums + albumsadd
+		####login yes = html will load the "logged in as" navbar
+		return render_template("index.html", albums = albums, username = username, login = "yes")
+	return render_template("index.html", albums = albums, login = "no")
+
+#if op==signin
+#OTHER AUTHENTICATION SHIT!!!
+
+
+
+@app.route('/ilrj0i/pa1/user', methods=['GET'])
+def signup():
+	if 'username' in session:
+		if datetime.datetime.now() - session['lastactivity'] > datetime.timedelta(minutes=5):
+			####
+			logout()
+		session['lastactivity'] = datetime.datetime.now()
+		username = session['username']
+		return render_template("edituser.html", username = username, login = "yes")
+	return render_template("user.html", login = "no")
+
+@app.route('/ilrj0i/pa1/user', methods=['POST'])
+def createaccount():
+	username = request.form['username']
+	firstname = request.form['firstname']
+	lastname = request.form['lastname']
+	password = request.form['password']
+	email = request.form['email']
+	#####check if username already exists
+	cursor = mysql.connection.cursor()
+	query = '''SELECT username FROM User WHERE username=''' + "'" + username + "'"
+	cursor.execute(query)
+	user = cursor.fetchall()
+	if len(user) > 0:
+		return render_template("user.html")
+	query = '''INSERT INTO User VALUES (''' + "'" + username + "', '" + firstname + "', '" + lastname + "', '" + password + "', '" + email + "')"
+	cursor.execute(query)
+	mysql.connection.commit()
+	query = '''SELECT * FROM Album WHERE access="public"'''
+	cursor.execute(query)
+	albums = cursor.fetchall()
+	return render_template("index.html", albums = albums)
+
+
+@app.route('/ilrj0i/pa1/user/edit', methods=['GET'])
+def edituserget():
+	return render_template("edituser.html", username = username)
+
+@app.route('/ilrj0i/pa1/user/edit', methods=['POST'])
+def edituserpost():
+	username = request.form['username']
+	firstname = request.form['firstname']
+	lastname = request.form['lastname']
+	password = request.form['password']
+	email = request.form['email']
+	cursor = mysql.connection.cursor()
+	query = '''UPDATE USER SET firstname=''' + "'" + firstname + "', lastname=" + "'" + lastname + "', password=" + "'" + password + "', email=" + "'" + email + "' WHERE username=" + "'" + username + "'"
+	cursor.execute(query)
+	mysql.connection.commit()
+	return render_template("edituser.html", username = username)
+
+@app.route('/ilrj0i/pa1/user/login', methods=['GET'])
+def userloginget():
+	return render_template("login.html")
+
+@app.route('/ilrj0i/pa1/user/login', methods=['POST'])
+def userloginpost():
+	session['username'] = request.form['username']
+	session['lastactivity'] = datetime.now().time()
+	query = '''SELECT * FROM Album WHERE access="public"'''
+	cursor.execute(query)
+	albums = cursor.fetchall()
+	return render_template("index.html", albums = albums)
+
+@app.route('/ilrj0i/pa1/user/delete', methods=['POST'])
+def deleteuser():
+	username = request.form['username']
+	cursor = mysql.connection.cursor()
+	query = '''DELETE FROM User WHERE username=''' + "'" + username + "'"
+	cursor.execute(query)
+	mysql.connection.commit()
+	query = '''SELECT * FROM Album WHERE access="public"'''
+	cursor.execute(query)
+	albums = cursor.fetchall()
+	return render_template("index.html", albums = albums)
+
+@app.route('/ilrj0i/pa1/user/logout')
+def logout():
+	session.pop('username', None)
+	session.pop('lastactivity', None)
+	cursor = mysql.connection.cursor()
+	query = '''SELECT * FROM Album WHERE access="public"'''
+	cursor.execute(query)
+	albums = cursor.fetchall()
+	return render_template("index.html", albums = albums)
 
 @app.route('/ilrj0i/pa1/albums')
 def albumsss():
@@ -96,11 +210,13 @@ def editalbums():
 	if (request.form['op'] == 'add'):
 		#import pdb; pdb.set_trace()
 		created = str(datetime.now().date())
+		##############################################datetime.datetime.now().date()?
 		lastupdated = str(datetime.now().date())
 		username = request.form['username']
 		title = request.form['title']
+		access = request.form['access']
 		cursor = mysql.connection.cursor()
-		query = '''INSERT INTO Album (title, created, lastupdated, username) VALUES (''' + "'" + title + "', '" + created + "', '" + lastupdated + "', '" + username + "')"
+		query = '''INSERT INTO Album (title, created, lastupdated, username, access) VALUES (''' + "'" + title + "', '" + created + "', '" + lastupdated + "', '" + username + "', '" + access + "')"
 		cursor.execute(query)
 		mysql.connection.commit()
 		query = '''SELECT * FROM Album WHERE username=''' + "'" + username + "'"
@@ -168,7 +284,7 @@ def editalbum():
 		albumid = request.form['albumid']
 		username = request.form['username']
 		cursor = mysql.connection.cursor()
-		query = '''INSERT INTO AlbumAccess VALUES (''' + "'" + albumid "', '"+ username + "')" 
+		query = '''INSERT INTO AlbumAccess (albumid, username) VALUES (''' + "'" + albumid + "','" + username + "')" 
 		cursor.execute(query)
 		mysql.connection.commit()
 		query = '''SELECT username FROM AlbumAccess WHERE albumid=''' + "'" + albumid + "'"
@@ -265,6 +381,9 @@ def viewalbum():
 	#	pics.append(picsssss[0])
 	return render_template("editalbum.html", pics = pics, albumid = albumid, accessors = accessors)
 	#return render_template("editalbum.html", pics = pics, pics_in_album = pics_in_album, albumid = albumid)
+
+#app.secret_key = os.urandom(24)
+app.secret_key = 'A0Zr98j/3yX R~XHH!jmN]LWX/,?RT'
 
 if __name__ == '__main__':
 	app.run()

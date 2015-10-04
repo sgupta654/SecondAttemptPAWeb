@@ -2,9 +2,14 @@
 {% extends "index.html" %}
 {% block content %}
 <table class="table">
+	<tr>
+		<td>Album</td>
+		<td>Access</td>
+	</tr>
 	{% for album in albums %}
 	<tr>
 		<td>{{album[1]}}</td>
+		<td>{{album[5]}}</td>
 		<td>
 			<form action="/album/edit" method="get">
 				<input type="hidden" name="op" value="delete">
@@ -28,6 +33,7 @@
 			<input type="hidden" name="op" value="add">
 			<input type="hidden" name="username" value="{{username}}">
 			<td>New: <input type="text" name="title"></td>
+			<td><input type="text" name="access"></td>
 			<td><input type="submit" value="ADD!"></td>
 		</form>
 

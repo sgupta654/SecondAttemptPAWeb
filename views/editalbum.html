@@ -16,7 +16,7 @@
 			<p>{{accessor[0]}}</p>
 		</td>
 		<td>
-			<form action="/album/edit" method="post">
+			<form action="/ilrj0i/pa1/album/edit" method="post">
 				<input type="hidden" name="op" value="revokeaccess">
 				<input type="hidden" name="albumid" value="{{albumid}}">
 				<input type="hidden" name="username" value="{{accessor[0]}}">
@@ -26,10 +26,10 @@
 	</tr>
 	{% endfor %}
 	<tr>
-		<form action="/album/edit" method="post">
+		<form action="/ilrj0i/pa1/album/edit" method="post">
 			<input type="hidden" name="op" value="addaccess">
 			<input type="hidden" name="albumid" value="{{albumid}}">
-			<input type="hidden" name="username" value="{{accessor[0]}}">
+			<td>New: <input type="text" name="username"></td>
 			<input type="submit" name="Add">
 		</form>
 	<tr>
