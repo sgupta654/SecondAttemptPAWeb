@@ -11,8 +11,8 @@ ALLOWED_EXTENSIONS = set(['jpg', 'png', 'bmp', 'gif'])
 
 app = Flask(__name__, template_folder='views', static_folder='images')
 mysql = MySQL()
-app.config['MYSQL_USER'] = 'group36'
-app.config['MYSQL_PASSWORD'] = 'GOOCH'
+app.config['MYSQL_USER'] = 'root'
+app.config['MYSQL_PASSWORD'] = 'root'
 app.config['MYSQL_HOST'] = 'localhost'
 app.config['MYSQL_DB'] = 'group36'
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
@@ -29,6 +29,17 @@ def main_route():
 	cursor.execute('''SELECT * FROM User''')
 	users = cursor.fetchall()
 	return render_template("index.html", users = users)
+"""
+@app.route('/ilrj0i/pa1/user')
+def signup():
+
+@app.route('/ilrj0i/pa1/user/edit')
+def edituser():
+
+@app.route('/ilrj0i/pa1/user/login')
+def userlogin():
+
+"""
 
 @app.route('/ilrj0i/pa1/albums')
 def albumsss():
@@ -169,7 +180,7 @@ def editalbum():
 		albumid = request.form['albumid']
 		username = request.form['username']
 		cursor = mysql.connection.cursor()
-		query = '''INSERT INTO AlbumAccess VALUES (''' + "'" + albumid "', '"+ username + "')" 
+		query = '''INSERT INTO AlbumAccess (albumid, username) VALUES (''' + "'" + albumid + "','" + username + "')" 
 		cursor.execute(query)
 		mysql.connection.commit()
 		query = '''SELECT username FROM AlbumAccess WHERE albumid=''' + "'" + albumid + "'"
