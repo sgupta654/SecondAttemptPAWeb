@@ -16,10 +16,14 @@ app.config['MYSQL_USER'] = 'root'
 app.config['MYSQL_PASSWORD'] = 'my_password'
 app.config['MYSQL_HOST'] = 'localhost'
 app.config['MYSQL_DB'] = 'group36pa2'
-app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+#app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 mysql.init_app(app)
 
-@app.route('/ilrj0i/pa1/')
+#put this line before the route for the url
+#   /ilrj0i/pa2
+#i.e. for /user => /ilrj0i/pa2/user
+
+@app.route('/')
 def main_route():
 
 	# The next line gets the global application object
@@ -32,7 +36,7 @@ def main_route():
 	users = cursor.fetchall()
 	return render_template("index.html", users = users)
 	"""
-
+	#import pdb; pdb.set_trace()
 
 	cursor = mysql.connection.cursor()
 	query = '''SELECT * FROM Album WHERE access="public"'''
@@ -58,7 +62,7 @@ def main_route():
 
 
 
-@app.route('/ilrj0i/pa1/user', methods=['GET'])
+@app.route('/user', methods=['GET'])
 def signup():
 	if 'username' in session:
 		if datetime.datetime.now() - session['lastactivity'] > datetime.timedelta(minutes=5):
@@ -69,7 +73,7 @@ def signup():
 		return render_template("edituser.html", username = username, login = "yes")
 	return render_template("user.html", login = "no")
 
-@app.route('/ilrj0i/pa1/user', methods=['POST'])
+@app.route('/user', methods=['POST'])
 def createaccount():
 	username = request.form['username']
 	firstname = request.form['firstname']
@@ -92,11 +96,11 @@ def createaccount():
 	return render_template("index.html", albums = albums)
 
 
-@app.route('/ilrj0i/pa1/user/edit', methods=['GET'])
+@app.route('/user/edit', methods=['GET'])
 def edituserget():
 	return render_template("edituser.html", username = username)
 
-@app.route('/ilrj0i/pa1/user/edit', methods=['POST'])
+@app.route('/user/edit', methods=['POST'])
 def edituserpost():
 	username = request.form['username']
 	firstname = request.form['firstname']
@@ -109,11 +113,11 @@ def edituserpost():
 	mysql.connection.commit()
 	return render_template("edituser.html", username = username)
 
-@app.route('/ilrj0i/pa1/user/login', methods=['GET'])
+@app.route('/user/login', methods=['GET'])
 def userloginget():
 	return render_template("login.html")
 
-@app.route('/ilrj0i/pa1/user/login', methods=['POST'])
+@app.route('/user/login', methods=['POST'])
 def userloginpost():
 	session['username'] = request.form['username']
 	session['lastactivity'] = datetime.now().time()
@@ -122,7 +126,7 @@ def userloginpost():
 	albums = cursor.fetchall()
 	return render_template("index.html", albums = albums)
 
-@app.route('/ilrj0i/pa1/user/delete', methods=['POST'])
+@app.route('/user/delete', methods=['POST'])
 def deleteuser():
 	username = request.form['username']
 	cursor = mysql.connection.cursor()
@@ -134,7 +138,7 @@ def deleteuser():
 	albums = cursor.fetchall()
 	return render_template("index.html", albums = albums)
 
-@app.route('/ilrj0i/pa1/user/logout')
+@app.route('/user/logout')
 def logout():
 	session.pop('username', None)
 	session.pop('lastactivity', None)
@@ -144,7 +148,7 @@ def logout():
 	albums = cursor.fetchall()
 	return render_template("index.html", albums = albums)
 
-@app.route('/ilrj0i/pa1/albums')
+@app.route('/albums')
 def albumsss():
 	username = request.args.get('username')
 	cursor = mysql.connection.cursor()
@@ -153,7 +157,7 @@ def albumsss():
 	albums = cursor.fetchall()
 	return render_template("albums.html", albums = albums, username = username)
 
-@app.route('/ilrj0i/pa1/album')
+@app.route('/album')
 def albumfunc():
 	#import pdb; pdb.set_trace()
 	albumid = request.args.get('id')
@@ -176,7 +180,7 @@ def albumfunc():
 	return render_template("album.html", pics = pics, albumid = albumid)
 	#return render_template("album.html", albumid = albumid, pics = pics, pics_in_album = pics_in_album)
 
-@app.route('/ilrj0i/pa1/pic')
+@app.route('/pic')
 def pic():
 	requestpicid = request.args.get('id')
 	albumid = request.args.get('albid')
@@ -205,7 +209,7 @@ def pic():
 	return render_template("pic.html", picarr = picarr, albumid = albumid)
 	#return render_template("test.html", picarr = returnpic, albumid = albumID)
 
-@app.route('/ilrj0i/pa1/albums/edit', methods=['POST'])
+@app.route('/albums/edit', methods=['POST'])
 def editalbums():
 	if (request.form['op'] == 'add'):
 		#import pdb; pdb.set_trace()
@@ -243,7 +247,7 @@ def editalbums():
 	#albums = cursor.fetchall()
 	#return render_template("editalbums.html", albums = albums, username = username)
 
-@app.route('/ilrj0i/pa1/albums/edit', methods=['GET'])
+@app.route('/albums/edit', methods=['GET'])
 def vieweditalbums():
 	username = request.args.get('username')
 	cursor = mysql.connection.cursor()
@@ -263,7 +267,7 @@ def secure_filename(filename):
 	now = datetime.now()
 	return (filename.rsplit('.', 1)[0] + "_" + str(now.year) + str(now.month) + str(now.day) + "_" + str(now.hour) + str(now.minute) + str(now.second))
 
-@app.route('/ilrj0i/pa1/album/edit', methods=['POST'])
+@app.route('/album/edit', methods=['POST'])
 def editalbum():
 	if (request.form['op'] == 'revokeaccess'):
 		albumid = request.form['albumid']
@@ -357,7 +361,7 @@ def editalbum():
 	#if request.form['op'] == 'add':
 		################
 
-@app.route('/ilrj0i/pa1/album/edit', methods=['GET'])
+@app.route('/album/edit', methods=['GET'])
 def viewalbum():
 	albumid = request.args.get('id')
 	cursor = mysql.connection.cursor()

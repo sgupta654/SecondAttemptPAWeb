@@ -1,4 +1,4 @@
-use group36;
+use group36pa2;
 INSERT INTO User (username, firstname, lastname, password, email)
   VALUES ('sportslover', 'Paul', 'Walker', '2fast2furious', 'sportslover@hotmail.com');
 
