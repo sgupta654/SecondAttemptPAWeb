@@ -6,8 +6,7 @@
 	<title>Photo Album Project</title>
 </head>
 <body>
-
-
+	{% if login == "yes" %}
 		<nav class="navbar navbar-default">
 		  <div class="container-fluid">
 		    <!-- Brand and toggle get grouped for better mobile display -->
@@ -36,39 +35,41 @@
 		    </div><!-- /.navbar-collapse -->
 		  </div><!-- /.container-fluid -->
 		</nav>
+	{% endif %}
 
-
-
-
-
-
-<div class="page-header">
+<div class="text-center">
 	<h1>Welcome to our album project.</h1>
 </div>
+<p class="text-center">This project allows users to view, edit, and delete picture albums.</p>
+<br>
 {% block content %}
-	<p>This project allows users to view, edit, and delete picture albums.</p>
-	<br>
-<<<<<<< HEAD
-	{% if login == "yes" %}
+   {% if login == "no" %}
+		<div class="col-md-4 center-block">
+		    <button id="singlebutton" name="singlebutton" class="btn btn-primary center-block">Log In</button>
+		<div class="col-md-4 center-block">
+		<br>
+		<div class="col-md-4 center-block">
+		    <button id="singlebutton" name="singlebutton" class="btn btn-primary center-block">Sign Up</button>
+		</div>
+		<br>
+		<div class="text-center">
+			<h3>Viewable Albums</h3>
+		</div>
 	{% endif %}
 
 
 
 
+<!--
+
 	<div class="btn-group" role="group" aria-label="...">
 	  <button type="button" class="btn btn-default">Log in <a href="/ilrj0i/pa1/user/login">here</a></button>
-	  <button type="button" class="btn btn-default">Sign up <a href="/ilrj0i/pa1/user">here</a></button>
+	  <button type="button" class="btn btn-default">Sign up <a href="/ilrj0i/pa1/user">here</a></button>-->
 	  <!--
 	  HOW TO REFERENCE BUTTONS?
 	  <button type="button" class="btn btn-default" href="/ilrj0i/pa1/user/login">Log In</button>
-	  <button type="button" class="btn btn-default" href="/ilrj0i/pa1/user">Sign Up</button>-->
-	</div>
-=======
-	<p>Log in <a href="/ilrj0i/pa2/user/login">here</a></p>
-	<br>
-	<p>Sign up <a href="/ilrj0i/pa2/user">here</a></p>
-	<br>
->>>>>>> fb7bdb54bd064c2a5994c170226df04f2a2c0cb7
+	  <button type="button" class="btn btn-default" href="/ilrj0i/pa1/user">Sign Up</button>
+	</div>-->
 	<table class="table">
 		<tr>
 			<td>Album</td>
