@@ -1,14 +1,48 @@
 {% extends "index.html" %}
 {% block content %}
 	<h1 class="text-center">Sign Up!</h1>
-	<p>test this for good enough pass and passwords match. if exist, redirect to /user/edit</p>
-	<form action="/ilrj0i/pa2/user" method="POST">
-		Username: <input type="text" name="username"><br>
-		First Name: <input type="text" name="firstname"><br>
-		Last Name: <input type="text" name="lastname"><br>
-		E-mail: <input type="text" name="email"><br>
-		Password: <input type="password" name="password"><br>
-		Reconfirm Password: <input type="password" name="password2"><br>
+	<h1>test this for good enough pass and passwords match. if exist, redirect to /user/edit</h1>
+	<form name="password_form" action="/ilrj0i/pa2/user" method="POST">
+
+		Username: <input type="text" name="username" pattern="^[A-Za-z0-9_]{3,20}$" required title="Letters, digits, and underscores ONLY! 3 characters minimum and 20 characters maximum." required/>
+
+		<br>
+
+		First Name: <input type="text" name="firstname" pattern="^[A-Za-z-]{1,20}$" required title="Letters and hyphen ONLY! 1 character minimum and 20 characters maximum" required/>
+
+		<br>
+
+		Last Name: <input type="text" name="lastname" pattern="^[A-Za-z-]{1,20}$" required title="Letters and hyphen ONLY! 1 character minimum and 20 characters maximum." required/>
+
+		<br>
+
+		E-mail: <input type="email" name="email" maxlength="20" required/>
+
+		<br>
+
+		Password: <input type="password" pattern="(?=^.{5,}[A-Za-z0-9_]$)(?=.*\d)(?=.*[a-zA-Z]).*$" name="password1" maxlength = "15" required title="Letters, digits, and underscores ONLY! 5 characters minimum and 15 characters maximum with at least one digit and one character." required onKeyUp="verify.check()">
+
+		<br>
+
+		Reconfirm Password: <input type="password" pattern="(?=^.{5,}[A-Za-z0-9_]$)(?=.*\d)(?=.*[a-zA-Z]).*$" name="password2" maxlength = "15" required title="Letters, digits, and underscores ONLY! 5 characters minimum and 15 characters maximum with at least one digit and one character." required onKeyUp="verify.check()">
+
+		<br>
+
+		<DIV ID="password_result">&nbsp;</DIV>
+
+		<SCRIPT TYPE="text/javascript" SRC="../static/js/verifynotify.js">
+
+		verify = new verifynotify();
+		verify.field1 = document.password_form.password;
+		verify.field2 = document.password_form.password2;
+		verify.result_id = "password_result";
+		verify.match_html = "<SPAN STYLE=\"color:blue\">Thank you, your passwords match!<\/SPAN>";
+		verify.nomatch_html = "<SPAN STYLE=\"color:red\">Please make sure your passwords match.<\/SPAN>";
+
+		verify.check();
+
+		</script>
+
 		<input type="submit" value="Submit">
 	</form>
 {% endblock %}
