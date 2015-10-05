@@ -15,7 +15,7 @@ mysql = MySQL()
 app.config['MYSQL_USER'] = 'root'
 app.config['MYSQL_PASSWORD'] = 'my_password'
 app.config['MYSQL_HOST'] = 'localhost'
-app.config['MYSQL_DB'] = 'group36'
+app.config['MYSQL_DB'] = 'group36pa2'
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 mysql.init_app(app)
 
@@ -32,7 +32,7 @@ def main_route():
 	users = cursor.fetchall()
 	return render_template("index.html", users = users)
 	"""
-	
+
 
 	cursor = mysql.connection.cursor()
 	query = '''SELECT * FROM Album WHERE access="public"'''
@@ -44,7 +44,7 @@ def main_route():
 			logout()
 		session['lastactivity'] = datetime.datetime.now()
 		username = session['username']
-		query =  '''SELECT * FROM Album INNER JOIN AlbumAccess ON AlbumAccess.albumid=Album.albumid WHERE AlbumAccess.username=''' + "'" + username = "'"
+		query =  '''SELECT * FROM Album INNER JOIN AlbumAccess ON AlbumAccess.albumid=Album.albumid WHERE AlbumAccess.username=''' + "'" + username + "'"
 		cursor.execute(query)
 		#######own albums?
 		albumsadd = cursor.fetchall()
@@ -284,7 +284,7 @@ def editalbum():
 		albumid = request.form['albumid']
 		username = request.form['username']
 		cursor = mysql.connection.cursor()
-		query = '''INSERT INTO AlbumAccess (albumid, username) VALUES (''' + "'" + albumid + "','" + username + "')" 
+		query = '''INSERT INTO AlbumAccess (albumid, username) VALUES (''' + "'" + albumid + "','" + username + "')"
 		cursor.execute(query)
 		mysql.connection.commit()
 		query = '''SELECT username FROM AlbumAccess WHERE albumid=''' + "'" + albumid + "'"
@@ -386,7 +386,7 @@ def viewalbum():
 app.secret_key = 'A0Zr98j/3yX R~XHH!jmN]LWX/,?RT'
 
 if __name__ == '__main__':
-	app.run()
+	app.run(debug=True)
 		# listen on external IPs
 		#app.run(host='localhost', port=5636, port=5736, debug=True)
 

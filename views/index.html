@@ -2,7 +2,7 @@
 <!DOCTYPE HTML>
 <html lang="en">
 <head>
-	<link rel="stylesheet" href="/static/css/bootstrap.css">
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
 	<title>Photo Album Project</title>
 </head>
 <body>
@@ -13,6 +13,22 @@
 	<h1>Welcome!</h1>
 	<p>This project allows users to view, edit, and delete picture albums.</p>
 	<br>
+	{% if login == "yes" %}
+		<nav class="navbar navbar-default navbar-fixed-top">
+		  <div class="container">
+		   		Home
+		  </div>
+		  <div class="container">
+		   		Edit Account
+		  </div>
+		  <div class="container">
+		   		My Albums
+		  </div>
+		  <p>Signed in as {{username}}</p>
+		  <div class="container">
+		   		Logout
+		  </div>
+		</nav>
 	<p>Log in <a href="/ilrj0i/pa1/user/login">here</a></p>
 	<br>
 	<p>Sign up <a href="/ilrj0i/pa1/user">here</a></p>
