@@ -120,10 +120,12 @@ def userloginget():
 @app.route('/ilrj0i/pa2/user/login', methods=['POST'])
 def userloginpost():
 	session['username'] = request.form['username']
-	session['lastactivity'] = datetime.now().time()
+	session['lastactivity'] = datetime.now()
 	query = '''SELECT * FROM Album WHERE access="public"'''
+	cursor = mysql.connection.cursor()
 	cursor.execute(query)
 	albums = cursor.fetchall()
+	mysql.connection.commit()
 	return render_template("index.html", albums = albums)
 
 @app.route('/ilrj0i/pa2/user/delete', methods=['POST'])
@@ -136,6 +138,7 @@ def deleteuser():
 	query = '''SELECT * FROM Album WHERE access="public"'''
 	cursor.execute(query)
 	albums = cursor.fetchall()
+	mysql.connection.commit()
 	return render_template("index.html", albums = albums)
 
 @app.route('/ilrj0i/pa2/user/logout')
@@ -144,8 +147,10 @@ def logout():
 	session.pop('lastactivity', None)
 	cursor = mysql.connection.cursor()
 	query = '''SELECT * FROM Album WHERE access="public"'''
+	cursor = mysql.connection.cursor()
 	cursor.execute(query)
 	albums = cursor.fetchall()
+	mysql.connection.commit()
 	return render_template("index.html", albums = albums)
 
 @app.route('/ilrj0i/pa2/albums')
