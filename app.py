@@ -13,7 +13,7 @@ ALLOWED_EXTENSIONS = set(['jpg', 'png', 'bmp', 'gif'])
 app = Flask(__name__, template_folder='views', static_folder='images')
 mysql = MySQL()
 app.config['MYSQL_USER'] = 'root'
-app.config['MYSQL_PASSWORD'] = 'my_password'
+app.config['MYSQL_PASSWORD'] = 'Natal13!'
 app.config['MYSQL_HOST'] = 'localhost'
 app.config['MYSQL_DB'] = 'group36pa2'
 #app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
@@ -120,10 +120,12 @@ def userloginget():
 @app.route('/ilrj0i/pa2/user/login', methods=['POST'])
 def userloginpost():
 	session['username'] = request.form['username']
-	session['lastactivity'] = datetime.now().time()
+	session['lastactivity'] = datetime.now()
 	query = '''SELECT * FROM Album WHERE access="public"'''
+	cursor = mysql.connection.cursor()
 	cursor.execute(query)
 	albums = cursor.fetchall()
+	mysql.connection.commit()
 	return render_template("index.html", albums = albums)
 
 @app.route('/ilrj0i/pa2/user/delete', methods=['POST'])
@@ -136,6 +138,7 @@ def deleteuser():
 	query = '''SELECT * FROM Album WHERE access="public"'''
 	cursor.execute(query)
 	albums = cursor.fetchall()
+	mysql.connection.commit()
 	return render_template("index.html", albums = albums)
 
 @app.route('/ilrj0i/pa2/user/logout')
@@ -144,8 +147,10 @@ def logout():
 	session.pop('lastactivity', None)
 	cursor = mysql.connection.cursor()
 	query = '''SELECT * FROM Album WHERE access="public"'''
+	cursor = mysql.connection.cursor()
 	cursor.execute(query)
 	albums = cursor.fetchall()
+	mysql.connection.commit()
 	return render_template("index.html", albums = albums)
 
 @app.route('/ilrj0i/pa2/albums')
