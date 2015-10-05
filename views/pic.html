@@ -1,12 +1,33 @@
 <!-- /pic -->
 {% extends "index.html" %}
 {% block content %}
-	<form action="/ilrj0i/pa2/album/edit" method="get">
-		<input type="hidden" name="id" value="{{albumid}}">
-		<input type="submit" value="Edit Album">
-	</form>
+  <div class="text-center">
+  <h1>{{album_name[0][0]}}</h1>
+  </div>
+  <div class="text-center">
+  <h3>{{username[0][0]}}</h3>
+  </div>
+
+  {% if access == True %}
+  	<form action="/ilrj0i/pa2/album/edit" method="GET">
+  		<input type="hidden" name="id" value="{{albumid}}">
+  		<input type="submit" value="Edit Album">
+  	</form>
+  {% endif %}
+
 	{% for pic in picarr %}
 		<img src="/images/{{pic[1]}}"/>
+    <p>{{caption[0]}}</p>
+    {% if access == True %}
+      <form action="/ilrj0i/pa2/pic" name="captionform" method="post">
+        Edit Comment: <br>
+        <textarea name="caption" rows="10" cols="30">
+          Enter caption here...
+        </textarea>
+        <br>
+        <input type="submit">
+      </form>
+    {% endif %}
 	{% endfor %}
 {% endblock %}
 

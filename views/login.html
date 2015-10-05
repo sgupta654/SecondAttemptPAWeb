@@ -1,7 +1,13 @@
 {% extends "index.html" %}
 {% block content %}
+{% if username == "no" %}
+<h2>Username invalid!</h2>
+{% endif %}
+{% if password == "no" %}
+<h2>Password invalid!</h2>
+{% endif %}
 <h1 class="text-center">Sign in</h1>
-<form action="/ilrj0i/pa2/user/login" method="POST">
+<form action="/ilrj0i/pa2/" method="POST">
 	<input type="hidden" name="op" value="signin">
 	Username: <input type="text" name="username">
 	<br>

@@ -1,17 +1,17 @@
 use group36pa2;
 INSERT INTO User (username, firstname, lastname, password, email)
-  VALUES ('sportslover', 'Paul', 'Walker', '2fast2furious', 'sportslover@hotmail.com');
+  VALUES ('sportslover', 'Paul', 'Walker', 'paulpass93', 'sportslover@hotmail.com');
 
 INSERT INTO User (username, firstname, lastname, password, email)
-  VALUES ('traveler', 'Rebecca', 'Travolta', 'doesHeLookLikeaBitch', 'rebt@explorer.org');
+  VALUES ('traveler', 'Rebecca', 'Travolta', 'rebeccapass15', 'rebt@explorer.org');
 
 INSERT INTO User (username, firstname, lastname, password, email)
-  VALUES ('spacejunkie', 'Bob', 'Spacey', 'xX420blaze_itXx', 'bspace@spacejunkies.net');
+  VALUES ('spacejunkie', 'Bob', 'Spacey', 'bob1pass', 'bspace@spacejunkies.net');
 
 INSERT INTO Album (title, created, lastupdated, username, access)
   VALUES ('I love sports', '2014-09-15', '2015-09-15', 'sportslover', 'public'),
-  ('I love football', '2001-10-25', '2012-04-20', 'sportslover', 'private'),
-  ('Around The World', '2004-03-13', '2007-07-30', 'traveler', 'private'),
+  ('I love football', '2001-10-25', '2012-04-20', 'sportslover', 'public'),
+  ('Around The World', '2004-03-13', '2007-07-30', 'traveler', 'public'),
   ('Cool Space Shots', '2003-08-02', '2010-11-14', 'spacejunkie', 'private');
 
 INSERT INTO Photo (picid, url, format, date)
