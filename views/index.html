@@ -48,6 +48,7 @@
 {% block content %}
 	<p>This project allows users to view, edit, and delete picture albums.</p>
 	<br>
+<<<<<<< HEAD
 	{% if login == "yes" %}
 	{% endif %}
 
@@ -62,17 +63,23 @@
 	  <button type="button" class="btn btn-default" href="/ilrj0i/pa1/user/login">Log In</button>
 	  <button type="button" class="btn btn-default" href="/ilrj0i/pa1/user">Sign Up</button>-->
 	</div>
+=======
+	<p>Log in <a href="/ilrj0i/pa2/user/login">here</a></p>
+	<br>
+	<p>Sign up <a href="/ilrj0i/pa2/user">here</a></p>
+	<br>
+>>>>>>> fb7bdb54bd064c2a5994c170226df04f2a2c0cb7
 	<table class="table">
 		<tr>
 			<td>Album</td>
 			<td>Name</td>
 		<tr>
-	{% for album in albums %} 
+	{% for album in albums %}
 		<tr>
 			<td>{{album[4]}}</td>
 			<td>{{album[1]}}</td>
 			<td>
-				<form action="/ilrj0i/pa1/album" method="GET">
+				<form action="/ilrj0i/pa2/album" method="GET">
 					<input type="hidden" name="id" value="{{album[0]}}">
 					<input type="submit" value="Check it out!">
 				</form>
