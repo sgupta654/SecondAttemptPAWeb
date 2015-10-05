@@ -42,19 +42,19 @@ def main_route():
 	query = '''SELECT * FROM Album WHERE access="public"'''
 	cursor.execute(query)
 	albums = cursor.fetchall()
-	if 'username' in session:
+	"""if 'username' in session:
 		if datetime.now() - session['lastactivity'] > timedelta(minutes = 5):
 			##############logout
 			logout()
 		session['lastactivity'] = datetime.now()
-		username = session['username']
+		#username = session['username']
 		query =  '''SELECT * FROM Album INNER JOIN AlbumAccess ON AlbumAccess.albumid=Album.albumid WHERE AlbumAccess.username=''' + "'" + username + "'"
 		cursor.execute(query)
 		#######own albums?
 		albumsadd = cursor.fetchall()
 		albums = albums + albumsadd
 		####login yes = html will load the "logged in as" navbar
-		return render_template("index.html", albums = albums, username = username, login = "yes")
+		return render_template("index.html", albums = albums, username = username, login = "yes")"""
 	return render_template("index.html", albums = albums, login = "no")
 
 #if op==signin
@@ -225,9 +225,19 @@ def pic():
 	cursor.execute(query)
 	album_owner = cursor.fetchall()
 	current_user = session['username']
+
+	#import pdb; pdb.set_trace()
 	access = False
 	if current_user == album_owner[0][0]:
 		access = True
+		caption = request.form['caption']
+		if (len(caption) > 0):
+			lastupdated = str(datetime.now().date())
+			query = '''UPDATE Album SET lastupdated=''' + "'"+lastupdated+"'" + "'WHERE albumid ='" + "'"+albumid+"'"
+			cursor.execute(query)
+			query = '''UPDATE Contain SET caption=''' + "'"+caption+"'" + "'WHERE albumid='" + "'"+albumid+"'"
+			cursor.execute(query)
+			mysql.connection.commit()
 
 	query = '''SELECT title FROM Album WHERE albumid=''' + "'"+albumid+"'"
 	cursor.execute(query)
