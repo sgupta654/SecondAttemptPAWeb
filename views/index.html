@@ -13,21 +13,21 @@
 	<h1>Welcome!</h1>
 	<p>This project allows users to view, edit, and delete picture albums.</p>
 	<br>
-	<p>Log in <a href="/ilrj0i/pa1/user/login">here</a></p>
+	<p>Log in <a href="/ilrj0i/pa2/user/login">here</a></p>
 	<br>
-	<p>Sign up <a href="/ilrj0i/pa1/user">here</a></p>
+	<p>Sign up <a href="/ilrj0i/pa2/user">here</a></p>
 	<br>
 	<table class="table">
 		<tr>
 			<td>Album</td>
 			<td>Name</td>
 		<tr>
-	{% for album in albums %} 
+	{% for album in albums %}
 		<tr>
 			<td>{{album[4]}}</td>
 			<td>{{album[1]}}</td>
 			<td>
-				<form action="/ilrj0i/pa1/album" method="GET">
+				<form action="/ilrj0i/pa2/album" method="GET">
 					<input type="hidden" name="id" value="{{album[0]}}">
 					<input type="submit" value="Check it out!">
 				</form>
