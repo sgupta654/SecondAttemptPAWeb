@@ -43,7 +43,7 @@ def main_route():
 	cursor.execute(query)
 	albums = cursor.fetchall()
 	if 'username' in session:
-		if datetime.now() - session['lastactivity'] > 5:
+		if datetime.now() - session['lastactivity'] > timedelta(minutes = 5):
 			##############logout
 			logout()
 		session['lastactivity'] = datetime.now()
@@ -172,6 +172,16 @@ def albumfunc():
 	#query = '''SELECT Contain.*, Photo.url FROM Contain INNER JOIN Photo ON Contain.picid=Photo.picid WHERE albumid=''' + "'" + albumid + "'"
 	cursor.execute(query)
 	pics = cursor.fetchall()
+	query = '''SELECT title FROM Album WHERE albumid=''' + "'"+albumid+"'"
+	cursor.execute(query)
+	album_name = cursor.fetchall()
+	query = '''SELECT username FROM Album WHERE albumid=''' + "'"+albumid+"'"
+	cursor.execute(query)
+	album_owner = cursor.fetchall()
+	current_user = session['username']
+	access = False
+	if current_user == album_owner[0][0]:
+		access = True
 	#query = '''SELECT picid FROM Contain WHERE albumid=''' + "'" + albumid + "'"
 	#cursor.execute(query)
 	#pics_in_album = cursor.fetchall()
@@ -182,7 +192,7 @@ def albumfunc():
 	#	picsssss = cursor.fetchall()
 	#	pics.append(picsssss[0])
 
-	return render_template("album.html", pics = pics, albumid = albumid)
+	return render_template("album.html", pics = pics, albumid = albumid, album_name = album_name, album_owner = album_owner, access = access)
 	#return render_template("album.html", albumid = albumid, pics = pics, pics_in_album = pics_in_album)
 
 @app.route('/ilrj0i/pa2/pic')
@@ -210,8 +220,25 @@ def pic():
 	cursor.execute(query)
 
 	picarr = cursor.fetchall()
+
+	query = '''SELECT username FROM Album WHERE albumid=''' + "'"+albumid+"'"
+	cursor.execute(query)
+	album_owner = cursor.fetchall()
+	current_user = session['username']
+	access = False
+	if current_user == album_owner[0][0]:
+		access = True
+
+	query = '''SELECT title FROM Album WHERE albumid=''' + "'"+albumid+"'"
+	cursor.execute(query)
+	album_name = cursor.fetchall()
+
+	query = '''SELECT caption FROM Contain WHERE picid=''' + "'"+requestpicid+"'"
+	cursor.execute(query)
+	caption = cursor.fetchall
+
 	#return str(picarr)
-	return render_template("pic.html", picarr = picarr, albumid = albumid)
+	return render_template("pic.html", picarr = picarr, albumid = albumid, album_name = album_name, username = album_owner, access = access, caption = caption)
 	#return render_template("test.html", picarr = returnpic, albumid = albumID)
 
 @app.route('/ilrj0i/pa2/albums/edit', methods=['POST'])
