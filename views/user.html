@@ -23,26 +23,50 @@
 
 		<br>
 
-		Password: <input type="password" pattern="(?=^.{5,}[A-Za-z0-9_]$)(?=.*\d)(?=.*[a-zA-Z]).*$" name="password1" maxlength = "15" required title="Letters, digits, and underscores ONLY! 5 characters minimum and 15 characters maximum with at least one digit and one character." required onKeyUp="verify.check()">
+		Password: <input type="password" pattern="(?=^.{5,}[A-Za-z0-9_]$)(?=.*\d)(?=.*[a-zA-Z]).*$" name="password1" maxlength = "15" required title="Letters, digits, and underscores ONLY! 5 characters minimum and 15 characters maximum with at least one digit and one character." required>
 
 		<br>
 
-		Reconfirm Password: <input type="password" pattern="(?=^.{5,}[A-Za-z0-9_]$)(?=.*\d)(?=.*[a-zA-Z]).*$" name="password2" maxlength = "15" required title="Letters, digits, and underscores ONLY! 5 characters minimum and 15 characters maximum with at least one digit and one character." required onKeyUp="verify.check()">
+		Reconfirm Password: <input type="password" pattern="(?=^.{5,}[A-Za-z0-9_]$)(?=.*\d)(?=.*[a-zA-Z]).*$" id="pass2" name="password2" maxlength = "15" required title="Letters, digits, and underscores ONLY! 5 characters minimum and 15 characters maximum with at least one digit and one character." required>
+
+		<p id="result">Please make sure passwords match!</p>
 
 		<br>
 
 		<DIV ID="password_result">&nbsp;</DIV>
 
-		<SCRIPT TYPE="text/javascript" SRC="/static/js/verifynotify.js">
+		<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" type="text/javascript">
+		$(document).ready(function () {
+			jQuery(function($){
 
-		verify = new verifynotify();
-		verify.field1 = document.password_form.password;
-		verify.field2 = document.password_form.password2;
-		verify.result_id = "password_result";
-		verify.match_html = "<SPAN STYLE=\"color:blue\">Thank you, your passwords match!<\/SPAN>";
-		verify.nomatch_html = "<SPAN STYLE=\"color:red\">Please make sure your passwords match.<\/SPAN>";
+			    var timer;
+			    $('#pass2').keypress(function(e){
+			        $('#result').text('Typing password...');
+			        
+			        // clear the timer as keys are still entered
+			        if(timer) clearTimeout(timer);
+			        
+			        // setup the timer
+			        timer = setTimeout(function(){
+			        	if(document.getElementById("password2").value != "" && document.getElementById("password2").value != document.getElementById("password1").value) {
+			        		$('#result').text('Passwords do not match!');
+			        	}
+			        	else {
+			        		$('#result').text('Passwords match, go ahead and submit!');
+			        	}
+			        }, 200);
+			    });
+			    
+			});
+		});
+
+
+
+		/*
+		verify = new verifynotify(document.getElementById("password_form").password1, document.getElementById("password_form").password2);
 
 		verify.check();
+		*/
 
 		</script>
 

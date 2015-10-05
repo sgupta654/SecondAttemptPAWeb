@@ -10,13 +10,12 @@ import os.path
 UPLOAD_FOLDER = 'images/'
 ALLOWED_EXTENSIONS = set(['jpg', 'png', 'bmp', 'gif'])
 
-
 app = Flask(__name__, template_folder='views', static_folder='images')
 mysql = MySQL()
 app.config['MYSQL_USER'] = 'root'
-app.config['MYSQL_PASSWORD'] = 'root'
+app.config['MYSQL_PASSWORD'] = 'my_password'
 app.config['MYSQL_HOST'] = 'localhost'
-app.config['MYSQL_DB'] = 'group36'
+app.config['MYSQL_DB'] = 'group36pa2'
 #app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 mysql.init_app(app)
 
@@ -310,24 +309,24 @@ def albumsss():
 @app.route('/ilrj0i/pa2/album')
 def albumfunc():
 	#import pdb; pdb.set_trace()
-<<<<<<< HEAD
-	albumid = request.args.get('id')
-	cursor = mysql.connection.cursor()
+
+#	albumid = request.args.get('id')
+#	cursor = mysql.connection.cursor()
 	#import pdb; pdb.set_trace()
-	query = '''SELECT * FROM Photo INNER JOIN Contain ON Contain.picid=Photo.picid WHERE Contain.albumid=''' + "'" + albumid + "'"
+#	query = '''SELECT * FROM Photo INNER JOIN Contain ON Contain.picid=Photo.picid WHERE Contain.albumid=''' + "'" + albumid + "'"
 	#query = '''SELECT Contain.*, Photo.url FROM Contain INNER JOIN Photo ON Contain.picid=Photo.picid WHERE albumid=''' + "'" + albumid + "'"
-	cursor.execute(query)
-	pics = cursor.fetchall()
-	query = '''SELECT title FROM Album WHERE albumid=''' + "'"+albumid+"'"
-	cursor.execute(query)
-	album_name = cursor.fetchall()
-	query = '''SELECT username FROM Album WHERE albumid=''' + "'"+albumid+"'"
-	cursor.execute(query)
-	album_owner = cursor.fetchall()
-	current_user = session['username']
-	access = False
-	if current_user == album_owner[0][0]:
-		access = True
+#	cursor.execute(query)
+#	pics = cursor.fetchall()
+#	query = '''SELECT title FROM Album WHERE albumid=''' + "'"+albumid+"'"
+#	cursor.execute(query)
+#	album_name = cursor.fetchall()
+#	query = '''SELECT username FROM Album WHERE albumid=''' + "'"+albumid+"'"
+#	cursor.execute(query)
+#	album_owner = cursor.fetchall()
+#	current_user = session['username']
+#	access = False
+#	if current_user == album_owner[0][0]:
+#		access = True
 	#query = '''SELECT picid FROM Contain WHERE albumid=''' + "'" + albumid + "'"
 	#cursor.execute(query)
 	#pics_in_album = cursor.fetchall()
@@ -338,8 +337,8 @@ def albumfunc():
 	#	picsssss = cursor.fetchall()
 	#	pics.append(picsssss[0])
 
-	return render_template("album.html", pics = pics, albumid = albumid, album_name = album_name, album_owner = album_owner, access = access)
-=======
+#	return render_template("album.html", pics = pics, albumid = albumid, album_name = album_name, album_owner = album_owner, access = access)
+
 	if 'username' in session:
 		if datetime.now() - session['lastactivity'] > timedelta(minutes=5):
 			####
@@ -363,7 +362,6 @@ def albumfunc():
 		return render_template("album.html", pics = pics, albumid = albumid, username = username, login = "yes")
 	return render_template("login.html", login = "no")
 
->>>>>>> 48ac77c75b4022ad7c75cd8177d1288ecf060769
 	#return render_template("album.html", albumid = albumid, pics = pics, pics_in_album = pics_in_album)
 
 @app.route('/ilrj0i/pa2/pic')
