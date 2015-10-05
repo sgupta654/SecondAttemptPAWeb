@@ -408,7 +408,6 @@ def pic():
 		return render_template("pic.html", picarr = picarr, albumid = albumid, username = username, login = "yes")
 	return render_template("login.html", login = "no")
 
-<<<<<<< HEAD
 	picarr = cursor.fetchall()
 
 	query = '''SELECT username FROM Album WHERE albumid=''' + "'"+albumid+"'"
@@ -439,8 +438,6 @@ def pic():
 
 	#return str(picarr)
 	return render_template("pic.html", picarr = picarr, albumid = albumid, album_name = album_name, username = album_owner, access = access, caption = caption)
-=======
->>>>>>> 48ac77c75b4022ad7c75cd8177d1288ecf060769
 	#return render_template("test.html", picarr = returnpic, albumid = albumID)
 
 @app.route('/ilrj0i/pa2/albums/edit', methods=['POST'])
