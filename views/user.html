@@ -1,5 +1,8 @@
 {% extends "index.html" %}
 {% block content %}
+{% if username == "no" %}
+	<h2>Username is taken :(<h2>
+{% endif %}
 	<h1 class="text-center">Sign Up!</h1>
 	<p>test this for good enough pass and passwords match. if exist, redirect to /user/edit</p>
 	<form action="/ilrj0i/pa2/user" method="POST">
