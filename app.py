@@ -1,6 +1,6 @@
 from flask import *
 from flask_mysqldb import MySQL
-from datetime import datetime
+from datetime import datetime, timedelta
 
 import os.path
 #import os.urandom
@@ -43,10 +43,10 @@ def main_route():
 	cursor.execute(query)
 	albums = cursor.fetchall()
 	if 'username' in session:
-		if datetime.datetime.now() - session['lastactivity'] > datetime.timedelta(minutes=5):
+		if datetime.now() - session['lastactivity'] > 5:
 			##############logout
 			logout()
-		session['lastactivity'] = datetime.datetime.now()
+		session['lastactivity'] = datetime.now()
 		username = session['username']
 		query =  '''SELECT * FROM Album INNER JOIN AlbumAccess ON AlbumAccess.albumid=Album.albumid WHERE AlbumAccess.username=''' + "'" + username + "'"
 		cursor.execute(query)
@@ -65,10 +65,10 @@ def main_route():
 @app.route('/ilrj0i/pa2/user', methods=['GET'])
 def signup():
 	if 'username' in session:
-		if datetime.datetime.now() - session['lastactivity'] > datetime.timedelta(minutes=5):
+		if datetime.now() - session['lastactivity'] > timedelta(minutes=5):
 			####
 			logout()
-		session['lastactivity'] = datetime.datetime.now()
+		session['lastactivity'] = datetime.now()
 		username = session['username']
 		return render_template("edituser.html", username = username, login = "yes")
 	return render_template("user.html", login = "no")
