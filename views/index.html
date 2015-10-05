@@ -4,10 +4,10 @@
 <head>
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
 	<title>Photo Album Project</title>
+
 </head>
 <body>
-
-
+	{% if login == "yes" %}
 		<nav class="navbar navbar-default">
 		  <div class="container-fluid">
 		    <!-- Brand and toggle get grouped for better mobile display -->
@@ -36,33 +36,56 @@
 		    </div><!-- /.navbar-collapse -->
 		  </div><!-- /.container-fluid -->
 		</nav>
+	{% endif %}
 
-
-
-
-
-
-<div class="page-header">
-	<h1>Welcome to our album project.</h1>
-</div>
 {% block content %}
-	<p>This project allows users to view, edit, and delete picture albums.</p>
+	<div class="text-center">
+	<h1>Welcome to our album project.</h1>
+	</div>
+	<p class="text-center">This project allows users to view, edit, and delete picture albums.</p>
 	<br>
-	{% if login == "yes" %}
+   {% if login == "no" %}
+		<div class="col-md-4 center-block">
+		    <button id="singlebutton" name="singlebutton" class="btn btn-primary center-block" href="/ilrj0i/pa2/user/login">Log In</button>
+		<div class="col-md-4 center-block">
+		<br>
+		<div class="col-md-4 center-block">
+		    <button id="singlebutton" name="singlebutton" class="btn btn-primary center-block" href="/ilrj0i/pa2/user">Sign Up</button>
+		</div>
+		<br>
+		<div class="text-center">
+			<h3>Viewable Albums</h3>
+		</div>
 	{% endif %}
 
 
 
 
+<!--
+
 	<div class="btn-group" role="group" aria-label="...">
+<<<<<<< HEAD
+	  <button type="button" class="btn btn-default">Log in <a href="/ilrj0i/pa1/user/login">here</a></button>
+	  <button type="button" class="btn btn-default">Sign up <a href="/ilrj0i/pa1/user">here</a></button>-->
+	  <!--
+	  HOW TO REFERENCE BUTTONS?
+	  <button type="button" class="btn btn-default" href="/ilrj0i/pa1/user/login">Log In</button>
+	  <button type="button" class="btn btn-default" href="/ilrj0i/pa1/user">Sign Up</button>
+	</div>-->
+=======
 	  <!--<button type="button" class="btn btn-default">Log in <a href="/ilrj0i/pa2/user/login">here</a></button>
 	  <button type="button" class="btn btn-default">Sign up <a href="/ilrj0i/pa2/user">here</a></button>
 
 	  HOW TO REFERENCE BUTTONS?-->
+	  <p>Log in <a href="/ilrj0i/pa1/user/login">here</a></p>
+ 	<br>
+ 	<p>Sign up <a href="/ilrj0i/pa1/user">here</a></p>
+ 	<br>
 	  <button type="button" class="btn btn-default" href="/ilrj0i/pa2/user/login">Log In</button>
 	  <button type="button" class="btn btn-default" href="/ilrj0i/pa2/user">Sign Up</button>
 	</div>
 
+>>>>>>> 131aba74d33fdfb7c95270e3198573dea0049a19
 	<table class="table">
 		<tr>
 			<td>Album</td>
@@ -83,7 +106,7 @@
 	</table>
 {% endblock %}
 <footer>
-	<p>Fall 2015. Andrew Chen | Sandeep Gupta | Brian Lim</p>
+	<p class="text-center">Fall 2015. Andrew Chen | Sandeep Gupta | Brian Lim</p>
 </footer>
 </body>
 </html>
