@@ -41,6 +41,9 @@
 		  </div><!-- /.container-fluid -->
 		</nav>
 	{% endif %}
+	{% if timeout == "yes" %}
+	<h2>Timeout occurred!</h2>
+	{% endif %}
 
 {% block content %}
 	<div class="text-center">
