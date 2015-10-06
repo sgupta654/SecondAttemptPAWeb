@@ -8,7 +8,11 @@
   <h3>{{album_owner[0][0]}}</h3>
 
 	{% for pic in picarr %}
-		<img src="/images/{{pic[1]}}"/>
+    <form action="/ilrj0i/pa2/pic" method="GET">
+		 <span style="font-size:5em;" class="glyphicon glyphicon-menu-left glyphicon-lg" aria-hidden="true"></span>
+    </form>
+     <img src="/images/{{pic[1]}}"/>
+    <span style="font-size:5em;" class="glyphicon glyphicon-menu-right glyphicon-lg" aria-hidden="true"></span>
     <p>{{caption[0]}}</p>
     <br>
   </div>

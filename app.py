@@ -12,8 +12,8 @@ ALLOWED_EXTENSIONS = set(['jpg', 'png', 'bmp', 'gif'])
 
 app = Flask(__name__, template_folder='views', static_folder='images')
 mysql = MySQL()
-app.config['MYSQL_USER'] = 'root'
-app.config['MYSQL_PASSWORD'] = 'Natal13!'
+app.config['MYSQL_USER'] = 'group36'
+app.config['MYSQL_PASSWORD'] = 'GOOCH'
 app.config['MYSQL_HOST'] = 'localhost'
 app.config['MYSQL_DB'] = 'group36pa2'
 #app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
@@ -168,9 +168,11 @@ def createaccount():
 	user = cursor.fetchall()
 	if len(user) > 0:
 		return render_template("user.html", username = "no", login = "no")
-	query = '''INSERT INTO User VALUES (''' + "'" + username + "', '" + firstname + "', '" + lastname + "', '" + password + "', '" + email + "')"
+	query = '''INSERT INTO User VALUES (''' + "'" + username + "', '" + firstname + "', '" + lastname + "', '" + password1 + "', '" + email + "')"
 	cursor.execute(query)
 	mysql.connection.commit()
+	session['username'] = username
+	session['lastactivity'] = datetime.now()
 	query = '''SELECT * FROM Album WHERE access="public"'''
 	cursor.execute(query)
 	albums = cursor.fetchall()
@@ -395,6 +397,9 @@ def pic():
 	cursor.execute(query)
 	caption = cursor.fetchall
 
+	query = '''SELECT * FROM Photo WHERE picid =''' + "'" + requestpicid + "'"
+	cursor.execute(query)
+	picarr = cursor.fetchall()
 	if 'username' in session:
 		if datetime.now() - session['lastactivity'] > timedelta(minutes=5):
 			####
@@ -426,10 +431,7 @@ def pic():
 		if username == album_owner[0][0]:
 			access = True
 
-		cursor = mysql.connection.cursor()
-		query = '''SELECT * FROM Photo WHERE picid =''' + "'" + requestpicid + "'"
-		cursor.execute(query)
-		picarr = cursor.fetchall()
+
 		#import pdb; pdb.set_trace()
 
 		#return str(picarr)
@@ -439,7 +441,7 @@ def pic():
 		return render_template("login.html", login = "no")
 
 	#return str(picarr)
-	return render_template("pic.html", picarr = picarr, albumid = albumid, album_name = album_name, username = username, album_owner = album_owner, access = access, caption = caption)
+	return render_template("pic.html", picarr = picarr, albumid = albumid, album_name = album_name, album_owner = album_owner, access = access, caption = caption, login = "no")
 	#return render_template("test.html", picarr = returnpic, albumid = albumID)
 
 @app.route('/ilrj0i/pa2/pic', methods=['POST'])
