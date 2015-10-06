@@ -2,6 +2,7 @@ from flask import *
 from flask_mysqldb import MySQL
 from functools import wraps
 from datetime import datetime, timedelta
+from werkzeug import generate_password_hash, check_password_hash
 
 import os.path
 #import os.urandom
@@ -22,6 +23,35 @@ mysql.init_app(app)
 #put this line before the route for the url
 #   /ilrj0i/pa2
 #i.e. for /user => /ilrj0i/pa2
+
+# USER CLASS FOR PASSWORD HASHING
+# http://code.tutsplus.com/tutorials/intro-to-flask-signing-in-and-out--net-29982
+"""class User(db.Model):
+  __tablename__ = 'users'
+  uid = db.Column(db.Integer, primary_key = True)
+  firstname = db.Column(db.String(100))
+  lastname = db.Column(db.String(100))
+  email = db.Column(db.String(120), unique=True)
+  pwdhash = db.Column(db.String(54))
+
+  def __init__(self, firstname, lastname, email, password):
+    self.firstname = firstname.title()
+    self.lastname = lastname.title()
+    self.email = email.lower()
+    self.set_password(password)
+
+  def set_password(self, password):
+    self.pwdhash = generate_password_hash(password)
+
+  def check_password(self, password):
+    return check_password_hash(self.pwdhash, password)"""
+
+# CREATING AN INSTANCE OF THE User CLASS
+
+"""newuser = User(form.firstname.data, form.lastname.data, form.email.data, form.password.data)
+      db.session.add(newuser)
+      db.session.commit()"""
+
 
 
 """def check_auth(username, password):
@@ -215,13 +245,19 @@ def edituserpost():
 		username = request.form['username']
 		firstname = request.form['firstname']
 		lastname = request.form['lastname']
-		password = request.form['password']
+		email = request.form['email']
+		password1 = request.form['password1']
+		password2 = request.form['password2']
+
+		if password1 != password2:
+			return render_template("edituser.html", login = "yes", passnotcorrect = "no", firstname = firstname, lastname = lastname, email = email)
+
 		email = request.form['email']
 		cursor = mysql.connection.cursor()
-		query = '''UPDATE User SET firstname=''' + "'" + firstname + "', lastname=" + "'" + lastname + "', password=" + "'" + password + "', email=" + "'" + email + "' WHERE username=" + "'" + username + "'"
+		query = '''UPDATE User SET firstname=''' + "'" + firstname + "', lastname=" + "'" + lastname + "', password=" + "'" + password1 + "', email=" + "'" + email + "' WHERE username=" + "'" + username + "'"
 		cursor.execute(query)
 		mysql.connection.commit()
-		return render_template("edituser.html", username = username, login = "yes")
+		return render_template("index.html", username = username, login = "yes")
 	return render_template("login.html", login = "no")
 
 @app.route('/ilrj0i/pa2/user/login', methods=['GET'])
@@ -310,37 +346,17 @@ def albumfunc():
 	albumid = request.args.get('id')
 	cursor = mysql.connection.cursor()
 	#import pdb; pdb.set_trace()
+	access = False
 
-
-	#query = '''SELECT * FROM Photo INNER JOIN Contain ON Contain.picid=Photo.picid WHERE Contain.albumid=''' + "'" + albumid + "'"
+	query = '''SELECT * FROM Photo INNER JOIN Contain ON Contain.picid=Photo.picid WHERE Contain.albumid=''' + "'" + albumid + "'"
 	#query = '''SELECT Contain.*, Photo.url FROM Contain INNER JOIN Photo ON Contain.picid=Photo.picid WHERE albumid=''' + "'" + albumid + "'"
-	query = '''SELECT Contain.*, Photo.url FROM table1 Contain, table2 Photo INNER JOIN Photo ON Contain.picid=Photo.picid WHERE albumid=''' + "'" + albumid + "'"
+	#query = '''SELECT Contain.*, Photo.url FROM table1 Contain, table2 Photo INNER JOIN Photo ON Contain.picid=Photo.picid WHERE albumid=''' + "'" + albumid + "'"
 	cursor.execute(query)
 	pics = cursor.fetchall()
-	query = '''SELECT title FROM Album WHERE albumid=''' + "'"+albumid+"'"
+	
+	query = '''SELECT * FROM Album WHERE albumid=''' + "'" + albumid + "'"
 	cursor.execute(query)
-	album_name = cursor.fetchall()
-	query = '''SELECT username FROM Album WHERE albumid=''' + "'"+albumid+"'"
-	cursor.execute(query)
-	album_owner = cursor.fetchall()
-	username = ""
-	access = False
-	query = '''SELECT * FROM Album WHERE access="public"'''
-	cursor = mysql.connection.cursor()
-	cursor.execute(query)
-	albums = cursor.fetchall()
-	#query = '''SELECT picid FROM Contain WHERE albumid=''' + "'" + albumid + "'"
-	#cursor.execute(query)
-	#pics_in_album = cursor.fetchall()
-	#pics = []
-	#for picid in pics_in_album:
-		#query = '''SELECT url FROM Photo WHERE picid=''' + "'" + picid + "'"
-		#cursor.execute(query)
-		#picsssss = cursor.fetchall()
-		#pics.append(picsssss[0])
-
-#	return render_template("album.html", pics = pics, albumid = albumid, album_name = album_name, album_owner = album_owner, access = access)
-
+	album_info = cursor.fetchall()
 	if 'username' in session:
 		if datetime.now() - session['lastactivity'] > timedelta(minutes=5):
 			####
@@ -360,8 +376,25 @@ def albumfunc():
 		pics = cursor.fetchall()
 		if username == album_owner[0][0]:
 			access = True
-		return render_template("album.html", pics = pics, albumid = albumid, username = username, album_name = album_name, album_owner = album_owner, access = access, login = "yes")
-	return render_template("album.html", pics = pics, albumid = albumid, username = username, album_name = album_name, album_owner = album_owner, access = access, login = "no")
+		return render_template("album.html", pics = pics, username = username, album_info = album_info, access = access, login = "yes")
+	return render_template("album.html", pics = pics, album_info = album_info, access = access, login = "no")
+	"""query = '''SELECT title FROM Album WHERE albumid=''' + "'"+albumid+"'"
+	cursor.execute(query)
+	album_name = cursor.fetchall()
+	query = '''SELECT username FROM Album WHERE albumid=''' + "'"+albumid+"'"
+	cursor.execute(query)
+	album_owner = cursor.fetchall()
+	username = ""
+	"""
+	
+	"""
+	only accessible ones shown
+	query = '''SELECT * FROM Album WHERE access="public"'''
+	cursor = mysql.connection.cursor()
+	cursor.execute(query)
+	albums = cursor.fetchall()
+	"""
+
 """
 ONLY ACCESSIBLE ONES ARE DISPLAYED
 	query = '''SELECT albumid FROM Album WHERE albumid=''' + "'" + albumid + "' AND access='public'"
@@ -382,31 +415,33 @@ def pic():
 	albumid = request.args.get('albid')
 	access = False
 
-	query = '''SELECT username FROM Album WHERE albumid=''' + "'"+albumid+"'"
+	query = '''SELECT * FROM Album WHERE albumid=''' + "'" + albumid + "'"
 	cursor.execute(query)
-	album_owner = cursor.fetchall()
+	album_info = cursor.fetchall()
 
-	query = '''SELECT title FROM Album WHERE albumid=''' + "'"+albumid+"'"
+	query = '''SELECT * FROM Contain WHERE picid=''' + "'" + requestpicid + "' AND albumid=" + "'" + albumid + "'"		##and albumid?
 	cursor.execute(query)
-	album_name = cursor.fetchall()
+	pic = cursor.fetchall() 
 
-	query = '''SELECT access FROM Album WHERE albumid=''' + "'"+albumid+"'"
+	query = '''SELECT url FROM Photo WHERE picid=''' + "'" + requestpicid + "'"
 	cursor.execute(query)
-	album_views = cursor.fetchall()
+	url = cursor.fetchall()
 
-	query = '''SELECT caption FROM Contain WHERE picid=''' + "'"+requestpicid+"'"
-	cursor.execute(query)
-	caption = cursor.fetchall
 
-	query = '''SELECT * FROM Photo WHERE picid =''' + "'" + requestpicid + "'"
+	query = '''SELECT * FROM Contain WHERE albumid=''' + "'" + albumid + "'" + ''' AND sequencenum = (SELECT MAX(sequencenum) FROM Contain WHERE sequencenum < ''' + str(pic[0][3]) + ")"
+	print(query)
 	cursor.execute(query)
-	picarr = cursor.fetchall()
+	previous = cursor.fetchall()
+
+	query = '''SELECT * FROM Contain WHERE albumid=''' + "'" + albumid + "'" + ''' AND sequencenum = (SELECT MIN(sequencenum) FROM Contain WHERE sequencenum > ''' +  str(pic[0][3]) + ")"
+	cursor.execute(query)
+	next = cursor.fetchall()
+
 	if 'username' in session:
 		if datetime.now() - session['lastactivity'] > timedelta(minutes=5):
 			####
 			session.pop('username', None)
 			session.pop('lastactivity', None)
-			cursor = mysql.connection.cursor()
 			query = '''SELECT * FROM Album WHERE access="public"'''
 			cursor.execute(query)
 			albums = cursor.fetchall()
@@ -429,43 +464,22 @@ def pic():
 
 			if previousreq == "-1":
 		"""
-		if username == album_owner[0][0]:
+		if username == album_info[0][4]:
 			access = True
+		return render_template("pic.html", pic = pic, url = url[0][0], username = username, album_info = album_info, previous = previous, next = next, access = access, login = "yes")
 
-
-
-		########DANGEROUS TERRITORY##########	
-		query = '''SELECT * FROM Contain WHERE albumid=''' + "'" + albumid + "'" + ''' AND sequencenum = '(SELECT MAX(sequencenum) FROM Contain WHERE sequencenum < ''' + "'" + sequencenum + "'" +")'"
-	cursor.execute(query)
-	previous = cursor.fetchall()
-	query = '''SELECT * FROM Contain WHERE albumid=''' + "'" + albumid + "'" + ''' AND sequencenum = '(SELECT MIN(sequencenum) FROM Contain WHERE sequencenum > ''' + "'" + sequencenum + "'" +")'"
-	cursor.execute(query)
-	next = cursor.fetchall()
-
-
-		
 		#import pdb; pdb.set_trace()
 
-		#return str(picarr)
-	return render_template("pic.html", picarr = picarr, albumid = albumid, username = username, album_name = album_name, album_owner = album_owner, access = access, caption = caption, login = "yes")
-
-	if album_views[0][0] != "public":
+	#####necessary? already in album
+	"""
+	if album_info[0][5] != "public":
 		return render_template("login.html", login = "no")
-
+	"""
+		#return str(picarr)
 	#return str(picarr)
-	return render_template("pic.html", picarr = picarr, albumid = albumid, album_name = album_name, album_owner = album_owner, access = access, caption = caption, login = "no")
-	#return render_template("test.html", picarr = returnpic, albumid = albumID)
-
-@app.route('/ilrj0i/pa2/pic', methods=['POST'])
-def editpics():
-
-	#import pdb; pdb.set_trace() #<=== debugger
-
-	cursor = mysql.connection.cursor()
-	requestpicid = request.form['picid']
-	albumid = request.form['albumid']
-	access = False
-
+	return render_template("pic.html", pic = pic, url = url, album_info = album_info, previous = previous, next = next, access = access, login = "no")
+	#import pdb; pdb.set_trace()
+"""	
 	query = '''SELECT username FROM Album WHERE albumid=''' + "'"+albumid+"'"
 	cursor.execute(query)
 	album_owner = cursor.fetchall()
@@ -477,10 +491,70 @@ def editpics():
 	query = '''SELECT access FROM Album WHERE albumid=''' + "'"+albumid+"'"
 	cursor.execute(query)
 	album_views = cursor.fetchall()
-	#import pdb; pdb.set_trace() #<=== debugger
+"""
+
+	
+
+"""
+	query = '''SELECT caption FROM Contain WHERE picid=''' + "'"+requestpicid+"'"
+	cursor.execute(query)
+	caption = cursor.fetchall()
+"""
+
+	
+
+"""
 	query = '''SELECT * FROM Photo WHERE picid =''' + "'" + requestpicid + "'"
 	cursor.execute(query)
 	picarr = cursor.fetchall()
+"""
+
+	#return render_template("test.html", picarr = returnpic, albumid = albumID)
+
+@app.route('/ilrj0i/pa2/pic', methods=['POST'])
+def editpics():
+	#import pdb; pdb.set_trace()
+	cursor = mysql.connection.cursor()
+	requestpicid = request.form['picid']
+	albumid = request.form['albumid']
+	access = False
+
+	"""
+	query = '''SELECT username FROM Album WHERE albumid=''' + "'"+albumid+"'"
+	cursor.execute(query)
+	album_owner = cursor.fetchall()
+
+	query = '''SELECT title FROM Album WHERE albumid=''' + "'"+albumid+"'"
+	cursor.execute(query)
+	album_name = cursor.fetchall()
+
+	query = '''SELECT access FROM Album WHERE albumid=''' + "'"+albumid+"'"
+	cursor.execute(query)
+	album_views = cursor.fetchall()
+
+	query = '''SELECT * FROM Photo WHERE picid =''' + "'" + requestpicid + "'"
+	cursor.execute(query)
+	picarr = cursor.fetchall()
+
+	query = '''SELECT caption FROM Contain WHERE picid=''' + "'"+requestpicid+"'"
+	cursor.execute(query)
+	caption = cursor.fetchall()
+"""
+
+	query = '''SELECT * FROM Album WHERE albumid=''' + "'" + albumid + "'"
+	cursor.execute(query)
+	album_info = cursor.fetchall()
+
+	query = '''SELECT * FROM Contain WHERE picid=''' + "'" + requestpicid + "'"		##and albumid?
+	cursor.execute(query)
+	pic = cursor.fetchall() 
+
+	query = '''SELECT * FROM Contain WHERE albumid=''' + "'" + albumid + "'" + ''' AND sequencenum = '(SELECT MAX(sequencenum) FROM Contain WHERE sequencenum < ''' + "'" + sequencenum + "'" +")'"
+	cursor.execute(query)
+	previous = cursor.fetchall()
+	query = '''SELECT * FROM Contain WHERE albumid=''' + "'" + albumid + "'" + ''' AND sequencenum = '(SELECT MIN(sequencenum) FROM Contain WHERE sequencenum > ''' + "'" + sequencenum + "'" +")'"
+	cursor.execute(query)
+	next = cursor.fetchall()
 
 	if 'username' in session:
 		if datetime.now() - session['lastactivity'] > timedelta(minutes=5):
@@ -495,31 +569,29 @@ def editpics():
 		session['lastactivity'] = datetime.now()
 		username = session['username']
 
-		if username == album_owner[0]:
+		if username == album_owner[0][0]:
 			access = True
 			caption_new = request.form['caption']
-			if (len(caption_new) > 0):
-				lastupdated = str(datetime.now().date())
-				query = '''UPDATE Album SET lastupdated=''' + "'"+lastupdated+"'" + "'WHERE albumid ='" + "'"+albumid+"'"
-				cursor.execute(query)
-				query = '''UPDATE Contain SET caption=''' + "'"+caption_new+"'" + "'WHERE albumid='" + "'"+albumid+"'"
-				cursor.execute(query)
-				mysql.connection.commit()
+			lastupdated = str(datetime.now().date())
+			query = '''UPDATE Album SET lastupdated=''' + "'"+lastupdated+"'" + "WHERE albumid =" + "'"+albumid+"'"
+			cursor.execute(query)
+			query = '''UPDATE Contain SET caption=''' + "'"+caption_new+"'" + "WHERE picid=" + "'"+requestpicid+"'"
+			cursor.execute(query)
+			mysql.connection.commit()
 
-		query = '''SELECT caption FROM Contain WHERE picid=''' + "'"+requestpicid+"'"
-		cursor.execute(query)
-		caption = cursor.fetchall
+			query = '''SELECT caption FROM Contain WHERE picid=''' + "'"+requestpicid+"'"
+			cursor.execute(query)
+			caption = cursor.fetchall()
 
-		return render_template("pic.html", picarr = picarr, albumid = albumid, username = username, album_name = album_name, album_owner = album_owner, access = access, caption = caption, login = "yes")
+		return render_template("pic.html", pic = pic, username = username, album_info = album_info, access = access, login = "yes")
 
-	query = '''SELECT caption FROM Contain WHERE picid=''' + "'"+requestpicid+"'"
-	cursor.execute(query)
-	caption = cursor.fetchall
-
+	return render_template("pic.html", pic = pic, album_info = album_info, access = access, login="no")
+"""
 	if album_views[0][0] != "public":
 		return render_template("login.html", login = "no")
+"""
 	#return str(picarr)
-	return render_template("pic.html", picarr = picarr, albumid = albumid, album_name = album_name, username = username, album_owner = album_owner, access = access, caption = caption, login="no")
+	
 
 
 @app.route('/ilrj0i/pa2/albums/edit', methods=['POST'])
