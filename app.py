@@ -13,7 +13,7 @@ ALLOWED_EXTENSIONS = set(['jpg', 'png', 'bmp', 'gif'])
 app = Flask(__name__, template_folder='views', static_folder='images')
 mysql = MySQL()
 app.config['MYSQL_USER'] = 'root'
-app.config['MYSQL_PASSWORD'] = 'root'
+app.config['MYSQL_PASSWORD'] = 'my_password'
 app.config['MYSQL_HOST'] = 'localhost'
 app.config['MYSQL_DB'] = 'group36'
 #app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
@@ -153,7 +153,13 @@ def createaccount():
 	username = request.form['username']
 	firstname = request.form['firstname']
 	lastname = request.form['lastname']
-	password = request.form['password']
+	email = request.form['email']
+	password1 = request.form['password1']
+	password2 = request.form['password2']
+
+	if password1 != password2:
+		return render_template("user.html", passnotcorrect = "no", login = "no", username = username, firstname = firstname, lastname = lastname, email = email)
+
 	email = request.form['email']
 	#####check if username already exists
 	cursor = mysql.connection.cursor()
