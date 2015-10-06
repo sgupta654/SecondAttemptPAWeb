@@ -10,7 +10,7 @@
 	{% for pic in pic %}
 
   <img src="/images/{{url[0][0]}}"/>
-    
+
 
     <p>{{pic[2]}}</p>
     <br>
@@ -26,25 +26,28 @@
       <input type="hidden" name="picid" value="{{pic[0]}}">
       <input type="submit" value="Update Caption">
     </form>
-  {% endif %} 
-  {% for previous in previous %}
-  <form action="/ilrj0i/pa2/pic" method="get">
-    <input type="hidden" name="op" value="nav">
-    <input type="hidden" name="id" value="{{previous[1]}}">
-    <input type="hidden" name="albid" value="{{previous[0]}}">
-    <input type="hidden" name="sequencenum" value="{{previous[3]}}">
-    <input type="submit" value="Previous">
-  </form> 
-  {% endfor %}
-  {% for next in next %}
-  <form action="/ilrj0i/pa2/pic" method="get">
-    <input type="hidden" name="op" value="nav">
-    <input type="hidden" name="id" value="{{next[1]}}">
-    <input type="hidden" name="albid" value="{{next[0]}}">
-    <input type="hidden" name="sequencenum" value="{{next[3]}}">
-    <input type="submit" value="Next">
-  </form>
-  {% endfor %}
+  {% endif %}
+
+  <div class="text-center">
+    {% for previous in previous %}
+    <form action="/ilrj0i/pa2/pic" method="get">
+      <input type="hidden" name="op" value="nav">
+      <input type="hidden" name="id" value="{{previous[1]}}">
+      <input type="hidden" name="albid" value="{{previous[0]}}">
+      <input type="hidden" name="sequencenum" value="{{previous[3]}}">
+      <input type="submit" value="Previous">
+    </form>
+    {% endfor %}
+    {% for next in next %}
+    <form action="/ilrj0i/pa2/pic" method="get">
+      <input type="hidden" name="op" value="nav">
+      <input type="hidden" name="id" value="{{next[1]}}">
+      <input type="hidden" name="albid" value="{{next[0]}}">
+      <input type="hidden" name="sequencenum" value="{{next[3]}}">
+      <input type="submit" value="Next">
+    </form>
+    {% endfor %}
+  </div>
   {% endfor %}
 {% endblock %}
 

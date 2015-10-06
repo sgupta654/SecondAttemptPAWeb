@@ -14,8 +14,8 @@ ALLOWED_EXTENSIONS = set(['jpg', 'png', 'bmp', 'gif'])
 app = Flask(__name__, template_folder='views', static_folder='images')
 mysql = MySQL()
 
-app.config['MYSQL_USER'] = 'group36'
-app.config['MYSQL_PASSWORD'] = 'GOOCH'
+app.config['MYSQL_USER'] = 'root'
+app.config['MYSQL_PASSWORD'] = 'Natal13!'
 app.config['MYSQL_HOST'] = 'localhost'
 app.config['MYSQL_DB'] = 'group36pa2'
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
