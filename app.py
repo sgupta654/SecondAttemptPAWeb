@@ -15,7 +15,7 @@ mysql = MySQL()
 app.config['MYSQL_USER'] = 'root'
 app.config['MYSQL_PASSWORD'] = 'root'
 app.config['MYSQL_HOST'] = 'localhost'
-app.config['MYSQL_DB'] = 'group36pa2'
+app.config['MYSQL_DB'] = 'group36'
 #app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 mysql.init_app(app)
 
@@ -168,9 +168,11 @@ def createaccount():
 	user = cursor.fetchall()
 	if len(user) > 0:
 		return render_template("user.html", username = "no", login = "no")
-	query = '''INSERT INTO User VALUES (''' + "'" + username + "', '" + firstname + "', '" + lastname + "', '" + password + "', '" + email + "')"
+	query = '''INSERT INTO User VALUES (''' + "'" + username + "', '" + firstname + "', '" + lastname + "', '" + password1 + "', '" + email + "')"
 	cursor.execute(query)
 	mysql.connection.commit()
+	session['username'] = username
+	session['lastactivity'] = datetime.now()
 	query = '''SELECT * FROM Album WHERE access="public"'''
 	cursor.execute(query)
 	albums = cursor.fetchall()
