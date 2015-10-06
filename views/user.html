@@ -27,7 +27,7 @@
 
 		<br>
 
-		Reconfirm Password: <input type="password" pattern="(?=^.{5,}[A-Za-z0-9_]$)(?=.*\d)(?=.*[a-zA-Z]).*$" id="pass2" name="password2" maxlength = "15" required title="Letters, digits, and underscores ONLY! 5 characters minimum and 15 characters maximum with at least one digit and one character." required>
+		Reconfirm Password: <input type="text" pattern="(?=^.{5,}[A-Za-z0-9_]$)(?=.*\d)(?=.*[a-zA-Z]).*$" id="pass2" name="password2" maxlength = "15" required title="Letters, digits, and underscores ONLY! 5 characters minimum and 15 characters maximum with at least one digit and one character." required>
 
 		<p id="result">Please make sure passwords match!</p>
 
@@ -35,41 +35,36 @@
 
 		<DIV ID="password_result">&nbsp;</DIV>
 
-		<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" type="text/javascript">
-		$(document).ready(function () {
+
+		<input type="submit" value="Submit">
+	</form>
+	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" type="text/javascript">
+		$(document).ready() {
 			jQuery(function($){
 
 			    var timer;
 			    $('#pass2').keypress(function(e){
-			        $('#result').text('Typing password...');
+			        $('#result').text('Typing ...');
 			        
 			        // clear the timer as keys are still entered
 			        if(timer) clearTimeout(timer);
 			        
 			        // setup the timer
 			        timer = setTimeout(function(){
-			        	if(document.getElementById("password2").value != "" && document.getElementById("password2").value != document.getElementById("password1").value) {
-			        		$('#result').text('Passwords do not match!');
-			        	}
-			        	else {
-			        		$('#result').text('Passwords match, go ahead and submit!');
-			        	}
-			        }, 200);
+			            $('#result').text('End typing !');
+			        }, 2000);
 			    });
 			    
 			});
-		});
+		}
 
 
 
-		/*
-		verify = new verifynotify(document.getElementById("password_form").password1, document.getElementById("password_form").password2);
+	/*
+	verify = new verifynotify(document.getElementById("password_form").password1, document.getElementById("password_form").password2);
 
-		verify.check();
-		*/
+	verify.check();
+	*/
 
-		</script>
-
-		<input type="submit" value="Submit">
-	</form>
+	</script>
 {% endblock %}
