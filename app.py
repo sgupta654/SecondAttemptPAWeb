@@ -13,11 +13,12 @@ ALLOWED_EXTENSIONS = set(['jpg', 'png', 'bmp', 'gif'])
 
 app = Flask(__name__, template_folder='views', static_folder='images')
 mysql = MySQL()
-app.config['MYSQL_USER'] = 'root'
-app.config['MYSQL_PASSWORD'] = 'root'
+
+app.config['MYSQL_USER'] = 'group36'
+app.config['MYSQL_PASSWORD'] = 'GOOCH'
 app.config['MYSQL_HOST'] = 'localhost'
-app.config['MYSQL_DB'] = 'group36'
-#app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+app.config['MYSQL_DB'] = 'group36pa2'
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 mysql.init_app(app)
 
 #put this line before the route for the url
@@ -137,6 +138,8 @@ def userloginpost():
 	query = '''SELECT password FROM User WHERE username=''' + "'" +  username + "'"
 	cursor.execute(query)
 	dbpassword = cursor.fetchall()
+	for x in password:
+			x = chr((ord(x) + 7) % 3)
 	if len(dbpassword) == 0:
 		return render_template("login.html", username = "no", login = "no")
 	if dbpassword[0][0] != password:
@@ -190,6 +193,8 @@ def createaccount():
 	if password1 != password2:
 		return render_template("user.html", passnotcorrect = "no", login = "no", username = username, firstname = firstname, lastname = lastname, email = email)
 
+	for x in password1:
+			x = chr((ord(x) + 7) % 3)
 	email = request.form['email']
 	#####check if username already exists
 	cursor = mysql.connection.cursor()
@@ -252,6 +257,8 @@ def edituserpost():
 		if password1 != password2:
 			return render_template("edituser.html", login = "yes", passnotcorrect = "no", firstname = firstname, lastname = lastname, email = email)
 
+		for x in password1:
+			x = chr((ord(x) + 7) % 3)
 		email = request.form['email']
 		cursor = mysql.connection.cursor()
 		query = '''UPDATE User SET firstname=''' + "'" + firstname + "', lastname=" + "'" + lastname + "', password=" + "'" + password1 + "', email=" + "'" + email + "' WHERE username=" + "'" + username + "'"
@@ -353,7 +360,7 @@ def albumfunc():
 	#query = '''SELECT Contain.*, Photo.url FROM table1 Contain, table2 Photo INNER JOIN Photo ON Contain.picid=Photo.picid WHERE albumid=''' + "'" + albumid + "'"
 	cursor.execute(query)
 	pics = cursor.fetchall()
-	
+
 	query = '''SELECT * FROM Album WHERE albumid=''' + "'" + albumid + "'"
 	cursor.execute(query)
 	album_info = cursor.fetchall()
@@ -386,7 +393,7 @@ def albumfunc():
 	album_owner = cursor.fetchall()
 	username = ""
 	"""
-	
+
 	"""
 	only accessible ones shown
 	query = '''SELECT * FROM Album WHERE access="public"'''
@@ -421,7 +428,7 @@ def pic():
 
 	query = '''SELECT * FROM Contain WHERE picid=''' + "'" + requestpicid + "' AND albumid=" + "'" + albumid + "'"		##and albumid?
 	cursor.execute(query)
-	pic = cursor.fetchall() 
+	pic = cursor.fetchall()
 
 	query = '''SELECT url FROM Photo WHERE picid=''' + "'" + requestpicid + "'"
 	cursor.execute(query)
@@ -479,7 +486,7 @@ def pic():
 	#return str(picarr)
 	return render_template("pic.html", pic = pic, url = url, album_info = album_info, previous = previous, next = next, access = access, login = "no")
 	#import pdb; pdb.set_trace()
-"""	
+"""
 	query = '''SELECT username FROM Album WHERE albumid=''' + "'"+albumid+"'"
 	cursor.execute(query)
 	album_owner = cursor.fetchall()
@@ -493,7 +500,7 @@ def pic():
 	album_views = cursor.fetchall()
 """
 
-	
+
 
 """
 	query = '''SELECT caption FROM Contain WHERE picid=''' + "'"+requestpicid+"'"
@@ -501,7 +508,7 @@ def pic():
 	caption = cursor.fetchall()
 """
 
-	
+
 
 """
 	query = '''SELECT * FROM Photo WHERE picid =''' + "'" + requestpicid + "'"
@@ -547,7 +554,7 @@ def editpics():
 
 	query = '''SELECT * FROM Contain WHERE picid=''' + "'" + requestpicid + "'"		##and albumid?
 	cursor.execute(query)
-	pic = cursor.fetchall() 
+	pic = cursor.fetchall()
 
 	query = '''SELECT * FROM Contain WHERE albumid=''' + "'" + albumid + "'" + ''' AND sequencenum = '(SELECT MAX(sequencenum) FROM Contain WHERE sequencenum < ''' + "'" + sequencenum + "'" +")'"
 	cursor.execute(query)
@@ -591,7 +598,7 @@ def editpics():
 		return render_template("login.html", login = "no")
 """
 	#return str(picarr)
-	
+
 
 
 @app.route('/ilrj0i/pa2/albums/edit', methods=['POST'])
