@@ -302,6 +302,8 @@ def albumfunc():
 	albumid = request.args.get('id')
 	cursor = mysql.connection.cursor()
 	#import pdb; pdb.set_trace()
+
+
 	query = '''SELECT * FROM Photo INNER JOIN Contain ON Contain.picid=Photo.picid WHERE Contain.albumid=''' + "'" + albumid + "'"
 	#query = '''SELECT Contain.*, Photo.url FROM Contain INNER JOIN Photo ON Contain.picid=Photo.picid WHERE albumid=''' + "'" + albumid + "'"
 	cursor.execute(query)
@@ -314,7 +316,10 @@ def albumfunc():
 	album_owner = cursor.fetchall()
 	username = ""
 	access = False
-
+	query = '''SELECT * FROM Album WHERE access="public"'''
+	cursor = mysql.connection.cursor()
+	cursor.execute(query)
+	albums = cursor.fetchall()
 	#query = '''SELECT picid FROM Contain WHERE albumid=''' + "'" + albumid + "'"
 	#cursor.execute(query)
 	#pics_in_album = cursor.fetchall()
@@ -333,10 +338,7 @@ def albumfunc():
 			session.pop('username', None)
 			session.pop('lastactivity', None)
 			cursor = mysql.connection.cursor()
-			query = '''SELECT * FROM Album WHERE access="public"'''
-			cursor = mysql.connection.cursor()
-			cursor.execute(query)
-			albums = cursor.fetchall()
+			
 			return render_template("index.html", albums = albums, login = "no", timeout = "yes")
 		session['lastactivity'] = datetime.now()
 		username = session['username']
@@ -347,15 +349,20 @@ def albumfunc():
 		#query = '''SELECT Contain.*, Photo.url FROM Contain INNER JOIN Photo ON Contain.picid=Photo.picid WHERE albumid=''' + "'" + albumid + "'"
 		cursor.execute(query)
 		pics = cursor.fetchall()
-
 		if username == album_owner[0][0]:
 			access = True
 		return render_template("album.html", pics = pics, albumid = albumid, username = username, album_name = album_name, album_owner = album_owner, access = access, login = "yes")
+	return render_template("album.html", pics = pics, albumid = albumid, username = username, album_name = album_name, album_owner = album_owner, access = access, login = "no")
+"""
+ONLY ACCESSIBLE ONES ARE DISPLAYED
+	query = '''SELECT albumid FROM Album WHERE albumid=''' + "'" + albumid + "' AND access='public'" 
+	cursor.execute(query)
+	public_albums = cursor.fetchall()
+	if len(public_albums) > 0:
+		return render_template("album.html", pics = pics, albumid = albumid, username = username, album_name = album_name, album_owner = album_owner, access = access, login = "no")
 
-	if username == album_owner[0][0]:
-		access = True
-
-	return render_template("login.html", album_name = album_name, album_owner = album_owner, access = access, login = "no")
+	return render_template("login.html", albums = albums, login = "no")
+	"""	
 
 	#return render_template("album.html", albumid = albumid, pics = pics, pics_in_album = pics_in_album)
 
