@@ -14,15 +14,11 @@ ALLOWED_EXTENSIONS = set(['jpg', 'png', 'bmp', 'gif'])
 app = Flask(__name__, template_folder='views', static_folder='images')
 mysql = MySQL()
 
-app.config['MYSQL_USER'] = 'root'
-app.config['MYSQL_PASSWORD'] = 'my_password'
-
-#app.config['MYSQL_USER'] = 'group36'
-#app.config['MYSQL_PASSWORD'] = 'GOOCH'
-
+app.config['MYSQL_USER'] = 'group36'
+app.config['MYSQL_PASSWORD'] = 'GOOCH'
 app.config['MYSQL_HOST'] = 'localhost'
 app.config['MYSQL_DB'] = 'group36pa2'
-#app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 mysql.init_app(app)
 
 #put this line before the route for the url
@@ -421,7 +417,7 @@ def pic():
 	requestpicid = request.args.get('id')
 	albumid = request.args.get('albid')
 	access = False
-
+	#import pdb; pdb.set_trace()
 	query = '''SELECT username FROM Album WHERE albumid=''' + "'"+albumid+"'"
 	cursor.execute(query)
 	album_owner = cursor.fetchall()
@@ -436,7 +432,7 @@ def pic():
 
 	query = '''SELECT caption FROM Contain WHERE picid=''' + "'"+requestpicid+"'"
 	cursor.execute(query)
-	caption = cursor.fetchall
+	caption = cursor.fetchall()
 
 	query = '''SELECT * FROM Photo WHERE picid =''' + "'" + requestpicid + "'"
 	cursor.execute(query)
@@ -472,11 +468,11 @@ def pic():
 		if username == album_owner[0][0]:
 			access = True
 
-		
+
 		#import pdb; pdb.set_trace()
 
 		#return str(picarr)
-		return render_template("pic.html", picarr = picarr, albumid = albumid, username = username, album_name = album_name, album_owner = album_owner, access = access, caption = caption, login = "yes")
+		return render_template("pic.html", picarr = picarr, albumid = albumid, album_name = album_name, album_owner = album_owner, access = access, caption = caption, login = "yes")
 
 	if album_views[0][0] != "public":
 		return render_template("login.html", login = "no")
@@ -487,9 +483,7 @@ def pic():
 
 @app.route('/ilrj0i/pa2/pic', methods=['POST'])
 def editpics():
-
-	#import pdb; pdb.set_trace() #<=== debugger
-
+	#import pdb; pdb.set_trace()
 	cursor = mysql.connection.cursor()
 	requestpicid = request.form['picid']
 	albumid = request.form['albumid']
@@ -506,10 +500,14 @@ def editpics():
 	query = '''SELECT access FROM Album WHERE albumid=''' + "'"+albumid+"'"
 	cursor.execute(query)
 	album_views = cursor.fetchall()
-	#import pdb; pdb.set_trace() #<=== debugger
+
 	query = '''SELECT * FROM Photo WHERE picid =''' + "'" + requestpicid + "'"
 	cursor.execute(query)
 	picarr = cursor.fetchall()
+
+	query = '''SELECT caption FROM Contain WHERE picid=''' + "'"+requestpicid+"'"
+	cursor.execute(query)
+	caption = cursor.fetchall()
 
 	if 'username' in session:
 		if datetime.now() - session['lastactivity'] > timedelta(minutes=5):
@@ -524,26 +522,21 @@ def editpics():
 		session['lastactivity'] = datetime.now()
 		username = session['username']
 
-		if username == album_owner[0]:
+		if username == album_owner[0][0]:
 			access = True
 			caption_new = request.form['caption']
-			if (len(caption_new) > 0):
-				lastupdated = str(datetime.now().date())
-				query = '''UPDATE Album SET lastupdated=''' + "'"+lastupdated+"'" + "'WHERE albumid ='" + "'"+albumid+"'"
-				cursor.execute(query)
-				query = '''UPDATE Contain SET caption=''' + "'"+caption_new+"'" + "'WHERE albumid='" + "'"+albumid+"'"
-				cursor.execute(query)
-				mysql.connection.commit()
+			lastupdated = str(datetime.now().date())
+			query = '''UPDATE Album SET lastupdated=''' + "'"+lastupdated+"'" + "WHERE albumid =" + "'"+albumid+"'"
+			cursor.execute(query)
+			query = '''UPDATE Contain SET caption=''' + "'"+caption_new+"'" + "WHERE picid=" + "'"+requestpicid+"'"
+			cursor.execute(query)
+			mysql.connection.commit()
 
-		query = '''SELECT caption FROM Contain WHERE picid=''' + "'"+requestpicid+"'"
-		cursor.execute(query)
-		caption = cursor.fetchall
+			query = '''SELECT caption FROM Contain WHERE picid=''' + "'"+requestpicid+"'"
+			cursor.execute(query)
+			caption = cursor.fetchall()
 
 		return render_template("pic.html", picarr = picarr, albumid = albumid, username = username, album_name = album_name, album_owner = album_owner, access = access, caption = caption, login = "yes")
-
-	query = '''SELECT caption FROM Contain WHERE picid=''' + "'"+requestpicid+"'"
-	cursor.execute(query)
-	caption = cursor.fetchall
 
 	if album_views[0][0] != "public":
 		return render_template("login.html", login = "no")
