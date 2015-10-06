@@ -1,7 +1,11 @@
-# pa1_ilrj0i
+# pa2_ilrj0i
 
 Group Name:
         4Maize8Blue5
+
+Group Number: 
+		36
+
 Members:
         Andrew Chen (anchen):
         Brian Lim (blimmer):
@@ -15,4 +19,5 @@ Deploy:
         to run the program
 
 Extra:
-        We are using 1 late day
+        Added styling (internet access is needed to pull styling from 
+        Bootstraps servers)

@@ -2,6 +2,7 @@ from flask import *
 from flask_mysqldb import MySQL
 from functools import wraps
 from datetime import datetime, timedelta
+from werkzeug import generate_password_hash, check_password_hash
 
 import os.path
 #import os.urandom
@@ -27,6 +28,35 @@ mysql.init_app(app)
 #put this line before the route for the url
 #   /ilrj0i/pa2
 #i.e. for /user => /ilrj0i/pa2
+
+# USER CLASS FOR PASSWORD HASHING
+# http://code.tutsplus.com/tutorials/intro-to-flask-signing-in-and-out--net-29982
+"""class User(db.Model):
+  __tablename__ = 'users'
+  uid = db.Column(db.Integer, primary_key = True)
+  firstname = db.Column(db.String(100))
+  lastname = db.Column(db.String(100))
+  email = db.Column(db.String(120), unique=True)
+  pwdhash = db.Column(db.String(54))
+   
+  def __init__(self, firstname, lastname, email, password):
+    self.firstname = firstname.title()
+    self.lastname = lastname.title()
+    self.email = email.lower()
+    self.set_password(password)
+     
+  def set_password(self, password):
+    self.pwdhash = generate_password_hash(password)
+   
+  def check_password(self, password):
+    return check_password_hash(self.pwdhash, password)"""
+
+# CREATING AN INSTANCE OF THE User CLASS
+
+"""newuser = User(form.firstname.data, form.lastname.data, form.email.data, form.password.data)
+      db.session.add(newuser)
+      db.session.commit()"""
+
 
 
 """def check_auth(username, password):
