@@ -13,7 +13,7 @@ ALLOWED_EXTENSIONS = set(['jpg', 'png', 'bmp', 'gif'])
 app = Flask(__name__, template_folder='views', static_folder='images')
 mysql = MySQL()
 app.config['MYSQL_USER'] = 'root'
-app.config['MYSQL_PASSWORD'] = 'my_password'
+app.config['MYSQL_PASSWORD'] = 'Natal13!'
 app.config['MYSQL_HOST'] = 'localhost'
 app.config['MYSQL_DB'] = 'group36pa2'
 #app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
@@ -444,9 +444,7 @@ def pic():
 
 @app.route('/ilrj0i/pa2/pic', methods=['POST'])
 def editpics():
-
-	#import pdb; pdb.set_trace() #<=== debugger
-
+	import pdb; pdb.set_trace()
 	cursor = mysql.connection.cursor()
 	requestpicid = request.form['picid']
 	albumid = request.form['albumid']
@@ -463,10 +461,14 @@ def editpics():
 	query = '''SELECT access FROM Album WHERE albumid=''' + "'"+albumid+"'"
 	cursor.execute(query)
 	album_views = cursor.fetchall()
-	#import pdb; pdb.set_trace() #<=== debugger
+
 	query = '''SELECT * FROM Photo WHERE picid =''' + "'" + requestpicid + "'"
 	cursor.execute(query)
 	picarr = cursor.fetchall()
+
+	query = '''SELECT caption FROM Contain WHERE picid=''' + "'"+requestpicid+"'"
+	cursor.execute(query)
+	caption = cursor.fetchall
 
 	if 'username' in session:
 		if datetime.now() - session['lastactivity'] > timedelta(minutes=5):
@@ -492,15 +494,7 @@ def editpics():
 				cursor.execute(query)
 				mysql.connection.commit()
 
-		query = '''SELECT caption FROM Contain WHERE picid=''' + "'"+requestpicid+"'"
-		cursor.execute(query)
-		caption = cursor.fetchall
-
 		return render_template("pic.html", picarr = picarr, albumid = albumid, username = username, album_name = album_name, album_owner = album_owner, access = access, caption = caption, login = "yes")
-
-	query = '''SELECT caption FROM Contain WHERE picid=''' + "'"+requestpicid+"'"
-	cursor.execute(query)
-	caption = cursor.fetchall
 
 	if album_views[0][0] != "public":
 		return render_template("login.html", login = "no")
