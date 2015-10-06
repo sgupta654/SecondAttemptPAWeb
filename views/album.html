@@ -2,14 +2,14 @@
 {% extends "index.html" %}
 {% block content %}
 	<div class="text-center">
-	<h1>{{album_name[0][0]}}</h1>
+	<h1>{{album_info[0][1]}}</h1>
 	</div>
 	<div class="text-center">
-	<h3>{{album_owner[0][0]}}</h3>
+	<h3>{{album_info[0][4]}}</h3>
 	</div>
 	{% if access == True %}
 		<form action="/ilrj0i/pa2/album/edit" method="get">
-			<input type="hidden" name="id" value="{{albumid}}">
+			<input type="hidden" name="id" value="{{album_info[0][0]}}">
 			<input type="submit" value="Edit Album">
 		</form>
 	{% endif %}
@@ -18,7 +18,8 @@
 	<!-- ordered by sequencenum -->
 		<form action="/ilrj0i/pa2/pic" method="get">
 			<input type="hidden" name="id" value="{{pic[0]}}">
-			<input type="hidden" name="albid" value="{{albumid}}">
+			<input type="hidden" name="url" value="{{pic[1]}}">
+			<input type="hidden" name="albid" value="{{album_info[0][0]}}">
 			<!--<input type="hidden" name="doit" value="false"}-->
 			<p>Date: {{pic[3]}}</p>
 			<input type="image" src="/images/{{pic[1]}}" height="70" width="70">

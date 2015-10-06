@@ -41,6 +41,39 @@
 		  </div><!-- /.container-fluid -->
 		</nav>
 	{% endif %}
+
+	{% if login == "no" %}
+		<nav class="navbar navbar-default">
+		  <div class="container-fluid">
+		    <!-- Brand and toggle get grouped for better mobile display -->
+		    <div class="navbar-header">
+		      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+		        <span class="sr-only">Toggle navigation</span>
+		      </button>
+		      <a href="/ilrj0i/pa2/">
+		      <button type="button" class="btn btn-default navbar-btn">
+		      	<span class="glyphicon glyphicon-home" aria-hidden="true"></span>   Home
+		      </button>
+		  	  </a>
+		  	  <a href="/ilrj0i/pa2/user/login">
+		      <button type="button" class="btn btn-default navbar-btn"><span class="glyphicon glyphicon-user" aria-hidden="true"></span>   Create Account
+		      </button>
+		  	  </a>
+		  	  <a href="/ilrj0i/pa2/albums">
+		      <button type="button" class="btn btn-default navbar-btn">
+		      	<span class="glyphicon glyphicon-picture" aria-hidden="true"></span>   Public Albums
+			  	</button>
+			  	</a>
+			  	<a href="/ilrj0i/pa2/user/login">
+		      <button type="button" class="btn btn-default navbar-btn">
+		      	<span class="glyphicon glyphicon-ok-circle" aria-hidden="true"></span>   Log In
+			  	</button>
+			  	</a>
+		    </div>
+		  </div><!-- /.container-fluid -->
+		</nav>
+	{% endif %}
+
 	{% if timeout == "yes" %}
 	<h2>Timeout occurred!</h2>
 	{% endif %}
@@ -51,13 +84,6 @@
 	</div>
 	<p class="text-center">This project allows users to view, edit, and delete picture albums.</p>
 	<br>
-   {% if login == "no" %}
-   		 <a href="/ilrj0i/pa2/user/login"><button type="button" class="btn btn-default">Log In</button></a>
-   		 <br>
-	     <a href="/ilrj0i/pa2/user"><button type="button" class="btn btn-default">Sign Up</button></a>
-	     <br>
-	     <a href="/ilrj0i/pa2/albums"><button type="button" class="btn btn-default">Public Albums</button></a>
-	{% endif %}
 
 	<div class="text-center">
 		<h3>Viewable Albums</h3>

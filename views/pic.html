@@ -2,18 +2,17 @@
 {% extends "index.html" %}
 {% block content %}
   <div class="text-center">
-  <h1>{{album_name[0][0]}}</h1>
+  <h1>{{album_info[0][1]}}</h1>
   </div>
   <div class="text-center">
-  <h3>{{album_owner[0][0]}}</h3>
+  <h3>{{album_info[0][4]}}</h3>
 
-	{% for pic in picarr %}
-    <form action="/ilrj0i/pa2/pic" method="GET">
-		 <span style="font-size:5em;" class="glyphicon glyphicon-menu-left glyphicon-lg" aria-hidden="true"></span>
-    </form>
-     <img src="/images/{{pic[1]}}"/>
-    <span style="font-size:5em;" class="glyphicon glyphicon-menu-right glyphicon-lg" aria-hidden="true"></span>
-    <p>{{caption[0][0]}}</p>
+	{% for pic in pic %}
+
+  <img src="/images/{{url[0][0]}}"/>
+    
+
+    <p>{{pic[2]}}</p>
     <br>
   </div>
 
@@ -23,11 +22,29 @@
     <textarea name="caption" form="captionform" rows="5" cols="50" wrap="virtual" placeholder="Enter new caption here..." maxlength="255"></textarea>
     <br>
     <form action="/ilrj0i/pa2/pic" id="captionform" method="POST">
-      <input type="hidden" name="albumid" value="{{albumid}}">
+      <input type="hidden" name="albumid" value="{{album_info[0][0]}}">
       <input type="hidden" name="picid" value="{{pic[0]}}">
       <input type="submit" value="Update Caption">
     </form>
-  {% endif %}
+  {% endif %} 
+  {% for previous in previous %}
+  <form action="/ilrj0i/pa2/pic" method="get">
+    <input type="hidden" name="op" value="nav">
+    <input type="hidden" name="id" value="{{previous[1]}}">
+    <input type="hidden" name="albid" value="{{previous[0]}}">
+    <input type="hidden" name="sequencenum" value="{{previous[3]}}">
+    <input type="submit" value="Previous">
+  </form> 
+  {% endfor %}
+  {% for next in next %}
+  <form action="/ilrj0i/pa2/pic" method="get">
+    <input type="hidden" name="op" value="nav">
+    <input type="hidden" name="id" value="{{next[1]}}">
+    <input type="hidden" name="albid" value="{{next[0]}}">
+    <input type="hidden" name="sequencenum" value="{{next[3]}}">
+    <input type="submit" value="Next">
+  </form>
+  {% endfor %}
   {% endfor %}
 {% endblock %}
 
