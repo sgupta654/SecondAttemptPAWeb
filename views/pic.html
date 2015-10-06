@@ -6,28 +6,24 @@
   </div>
   <div class="text-center">
   <h3>{{album_owner[0][0]}}</h3>
-  </div>
-
-  {% if access == True %}
-  	<form action="/ilrj0i/pa2/album/edit" method="GET">
-  		<input type="hidden" name="id" value="{{albumid}}">
-  		<input type="submit" value="Edit Album">
-  	</form>
-  {% endif %}
 
 	{% for pic in picarr %}
 		<img src="/images/{{pic[1]}}"/>
     <p>{{caption[0]}}</p>
-    {% if access == True %}
-      <form action="/ilrj0i/pa2/pic" name="captionform" method="post">
-        Edit Comment: <br>
-        <textarea name="caption" rows="10" cols="30" wrap="virtual">
-          Enter new caption here...
-        </textarea>
-        <br>
-        <input type="submit">
-      </form>
-    {% endif %}
-	{% endfor %}
+    <br>
+  </div>
+
+  {% if access == True %}
+    <b>Edit Caption:</b>
+    <br>
+    <textarea name="caption" form="captionform" rows="5" cols="50" wrap="virtual" placeholder="Enter new caption here..." maxlength="255"></textarea>
+    <br>
+    <form action="/ilrj0i/pa2/pic" id="captionform" method="POST">
+      <input type="hidden" name="albumid" value="{{albumid}}">
+      <input type="hidden" name="picid" value="{{pic[0]}}">
+      <input type="submit" value="Update Caption">
+    </form>
+  {% endif %}
+  {% endfor %}
 {% endblock %}
 
