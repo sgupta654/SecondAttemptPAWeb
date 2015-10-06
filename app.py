@@ -466,7 +466,7 @@ def pic():
 		"""
 		if username == album_info[0][4]:
 			access = True
-		return render_template("pic.html", pic = pic, url = url[0][0], username = username, album_info = album_info, previous = previous, next = next, access = access, login = "yes")
+		return render_template("pic.html", pic = pic, url = url, username = username, album_info = album_info, previous = previous, next = next, access = access, login = "yes")
 
 		#import pdb; pdb.set_trace()
 
