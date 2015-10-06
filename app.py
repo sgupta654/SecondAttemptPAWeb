@@ -13,7 +13,7 @@ ALLOWED_EXTENSIONS = set(['jpg', 'png', 'bmp', 'gif'])
 app = Flask(__name__, template_folder='views', static_folder='images')
 mysql = MySQL()
 app.config['MYSQL_USER'] = 'root'
-app.config['MYSQL_PASSWORD'] = 'my_password'
+app.config['MYSQL_PASSWORD'] = 'Natal13!'
 app.config['MYSQL_HOST'] = 'localhost'
 app.config['MYSQL_DB'] = 'group36pa2'
 #app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
@@ -117,7 +117,6 @@ def main_route():
 #OTHER AUTHENTICATION SHIT!!!
 
 @app.route('/ilrj0i/pa2/', methods=['POST'])
-@requires_auth
 def userloginpost():
 	#checks database for username
 	username = request.form['username']
@@ -310,32 +309,30 @@ def albumsss():
 def albumfunc():
 	#import pdb; pdb.set_trace()
 
-#	albumid = request.args.get('id')
-#	cursor = mysql.connection.cursor()
+	albumid = request.args.get('id')
+	cursor = mysql.connection.cursor()
 	#import pdb; pdb.set_trace()
-#	query = '''SELECT * FROM Photo INNER JOIN Contain ON Contain.picid=Photo.picid WHERE Contain.albumid=''' + "'" + albumid + "'"
+	query = '''SELECT * FROM Photo INNER JOIN Contain ON Contain.picid=Photo.picid WHERE Contain.albumid=''' + "'" + albumid + "'"
 	#query = '''SELECT Contain.*, Photo.url FROM Contain INNER JOIN Photo ON Contain.picid=Photo.picid WHERE albumid=''' + "'" + albumid + "'"
-#	cursor.execute(query)
-#	pics = cursor.fetchall()
-#	query = '''SELECT title FROM Album WHERE albumid=''' + "'"+albumid+"'"
-#	cursor.execute(query)
-#	album_name = cursor.fetchall()
-#	query = '''SELECT username FROM Album WHERE albumid=''' + "'"+albumid+"'"
-#	cursor.execute(query)
-#	album_owner = cursor.fetchall()
-#	current_user = session['username']
-#	access = False
-#	if current_user == album_owner[0][0]:
-#		access = True
+	cursor.execute(query)
+	pics = cursor.fetchall()
+	query = '''SELECT title FROM Album WHERE albumid=''' + "'"+albumid+"'"
+	cursor.execute(query)
+	album_name = cursor.fetchall()
+	query = '''SELECT username FROM Album WHERE albumid=''' + "'"+albumid+"'"
+	cursor.execute(query)
+	album_owner = cursor.fetchall()
+	username = ""
+
 	#query = '''SELECT picid FROM Contain WHERE albumid=''' + "'" + albumid + "'"
 	#cursor.execute(query)
 	#pics_in_album = cursor.fetchall()
 	#pics = []
 	#for picid in pics_in_album:
-	#	query = '''SELECT url FROM Photo WHERE picid=''' + "'" + picid + "'"
-	#	cursor.execute(query)
-	#	picsssss = cursor.fetchall()
-	#	pics.append(picsssss[0])
+		#query = '''SELECT url FROM Photo WHERE picid=''' + "'" + picid + "'"
+		#cursor.execute(query)
+		#picsssss = cursor.fetchall()
+		#pics.append(picsssss[0])
 
 #	return render_template("album.html", pics = pics, albumid = albumid, album_name = album_name, album_owner = album_owner, access = access)
 
@@ -359,8 +356,16 @@ def albumfunc():
 		#query = '''SELECT Contain.*, Photo.url FROM Contain INNER JOIN Photo ON Contain.picid=Photo.picid WHERE albumid=''' + "'" + albumid + "'"
 		cursor.execute(query)
 		pics = cursor.fetchall()
-		return render_template("album.html", pics = pics, albumid = albumid, username = username, login = "yes")
-	return render_template("login.html", login = "no")
+		access = False
+		if username == album_owner[0][0]:
+			access = True
+		return render_template("album.html", pics = pics, albumid = albumid, username = username, album_name = album_name, album_owner = album_owner, access = access, login = "yes")
+
+	access = False
+	if username == album_owner[0][0]:
+		access = True
+
+	return render_template("login.html", album_name = album_name, album_owner = album_owner, access = access, login = "no")
 
 	#return render_template("album.html", albumid = albumid, pics = pics, pics_in_album = pics_in_album)
 
