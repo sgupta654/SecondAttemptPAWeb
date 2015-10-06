@@ -13,7 +13,7 @@ ALLOWED_EXTENSIONS = set(['jpg', 'png', 'bmp', 'gif'])
 app = Flask(__name__, template_folder='views', static_folder='images')
 mysql = MySQL()
 app.config['MYSQL_USER'] = 'root'
-app.config['MYSQL_PASSWORD'] = 'root'
+app.config['MYSQL_PASSWORD'] = 'my_password'
 app.config['MYSQL_HOST'] = 'localhost'
 app.config['MYSQL_DB'] = 'group36'
 #app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
@@ -215,13 +215,19 @@ def edituserpost():
 		username = request.form['username']
 		firstname = request.form['firstname']
 		lastname = request.form['lastname']
-		password = request.form['password']
+		email = request.form['email']
+		password1 = request.form['password1']
+		password2 = request.form['password2']
+
+		if password1 != password2:
+			return render_template("edituser.html", login = "yes", passnotcorrect = "no", firstname = firstname, lastname = lastname, email = email)
+
 		email = request.form['email']
 		cursor = mysql.connection.cursor()
-		query = '''UPDATE User SET firstname=''' + "'" + firstname + "', lastname=" + "'" + lastname + "', password=" + "'" + password + "', email=" + "'" + email + "' WHERE username=" + "'" + username + "'"
+		query = '''UPDATE User SET firstname=''' + "'" + firstname + "', lastname=" + "'" + lastname + "', password=" + "'" + password1 + "', email=" + "'" + email + "' WHERE username=" + "'" + username + "'"
 		cursor.execute(query)
 		mysql.connection.commit()
-		return render_template("edituser.html", username = username, login = "yes")
+		return render_template("index.html", username = username, login = "yes")
 	return render_template("login.html", login = "no")
 
 @app.route('/ilrj0i/pa2/user/login', methods=['GET'])
