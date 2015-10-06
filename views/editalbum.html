@@ -2,6 +2,27 @@
 {% extends "index.html" %}
 {% block content %}
 <table class="table">
+	<form action="/ilrj0i/pa2/album/edit" method="post">
+		<input type="hidden" name="op" value="changename">
+		<input type="hidden" name="albumid" value="{{albumid}}">
+		Change Name: <input type="text" name="newname">
+		<input type="submit" value="change">
+	</form>
+	Change Permissions:
+	<form action="/ilrj0i/pa2/album/edit" method="post">
+		<input type="hidden" name="albumid" value="{{albumid}}">
+		<input type="hidden" name="op" value="permissions">
+		<input type="hidden" name="type" value="private">
+		<input type="submit" value="private">
+	</form>
+	<form action="/ilrj0i/pa2/album/edit" method="post">
+		<input type="hidden" name="albumid" value="{{albumid}}">
+		<input type="hidden" name="op" value="permissions">
+		<input type="hidden" name="type" value="public">
+		<input type="submit" value="public">
+	</form>
+
+	{% if private == "yes" %}
 	<tr>
 		<td>
 			<p>Username</p>
@@ -33,7 +54,7 @@
 			<td><input type="submit" value="Add"></td>
 		</form>
 	<tr>
-
+	{% endif %}
 	{% for pic in pics %}
 	<tr>
 		<td>

@@ -41,6 +41,9 @@
 		  </div><!-- /.container-fluid -->
 		</nav>
 	{% endif %}
+	{% if timeout == "yes" %}
+	<h2>Timeout occurred!</h2>
+	{% endif %}
 
 {% block content %}
 	<div class="text-center">
@@ -52,6 +55,8 @@
    		 <a href="/ilrj0i/pa2/user/login"><button type="button" class="btn btn-default">Log In</button></a>
    		 <br>
 	     <a href="/ilrj0i/pa2/user"><button type="button" class="btn btn-default">Sign Up</button></a>
+	     <br>
+	     <a href="/ilrj0i/pa2/albums"><button type="button" class="btn btn-default">Public Albums</button></a>
 	{% endif %}
 
 	<div class="text-center">
