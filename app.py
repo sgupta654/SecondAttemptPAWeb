@@ -564,7 +564,21 @@ def editalbum():
 		session['lastactivity'] = datetime.now()
 		username = session['username']
 		albumid = request.form['albumid']
+		private = "yes"
 		cursor = mysql.connection.cursor()
+
+		if (request.form['op'] == 'changename'):
+			name = request.form['newname']
+			query = '''UPDATE Album SET title=''' + "'" + name + "' WHERE albumid=" + "'" + albumid + "'" 
+			cursor.execute(query)
+			mysql.connection.commit()
+
+		if (request.form['op'] == 'permissions'):
+			permissiontype = request.form['type']
+			query = '''UPDATE Album SET access=''' + "'" + permissiontype + "' WHERE albumid=" + "'" + albumid + "'"
+			cursor.execute(query)
+			mysql.connection.commit()
+		
 		if (request.form['op'] == 'revokeaccess'):
 			username = request.form['username']#############
 			query = '''DELETE FROM AlbumAccess WHERE username=''' + "'" + username + "'"
@@ -620,7 +634,12 @@ def editalbum():
 		query = '''SELECT * FROM Photo INNER JOIN Contain ON Contain.picid=Photo.picid WHERE Contain.albumid=''' + "'" + albumid + "'"
 		cursor.execute(query)
 		pics = cursor.fetchall()
-		return render_template("editalbum.html", pics = pics, albumid = albumid, accessors = accessors, login = "yes")
+		query = '''SELECT albumid FROM Album WHERE albumid=''' + "'" + albumid + "' AND access='public'" 
+		cursor.execute(query)
+		public_albums = cursor.fetchall()
+		if len(public_albums) > 0:
+			private = "no"
+		return render_template("editalbum.html", pics = pics, albumid = albumid, accessors = accessors, private = private, username = username, login = "yes")
 	return render_template("login.html", login = "no")
 
 
@@ -645,6 +664,7 @@ def viewalbum():
 		session['lastactivity'] = datetime.now()
 		username = session['username']
 		albumid = request.args.get('id')
+		private = "yes"
 		cursor = mysql.connection.cursor()
 
 		#access stuff
@@ -655,7 +675,14 @@ def viewalbum():
 		query = '''SELECT * FROM Photo INNER JOIN Contain ON Contain.picid=Photo.picid WHERE Contain.albumid=''' + "'" + albumid + "'"
 		cursor.execute(query)
 		pics = cursor.fetchall()
-		return render_template("editalbum.html", pics = pics, albumid = albumid, accessors = accessors, login = "yes")
+
+		query = '''SELECT albumid FROM Album WHERE albumid=''' + "'" + albumid + "' AND access='public'" 
+		cursor.execute(query)
+		public_albums = cursor.fetchall()
+		if len(public_albums) > 0:
+			private = "no"
+
+		return render_template("editalbum.html", pics = pics, albumid = albumid, accessors = accessors, username = username, private = private, login = "yes")
 	return render_template("login.html", login = "no")
 
 	#return render_template("editalbum.html", pics = pics, pics_in_album = pics_in_album, albumid = albumid)
