@@ -402,7 +402,7 @@ def pic():
 
 	query = '''SELECT caption FROM Contain WHERE picid=''' + "'"+requestpicid+"'"
 	cursor.execute(query)
-	caption = cursor.fetchall
+	caption = cursor.fetchall()
 
 	query = '''SELECT * FROM Photo WHERE picid =''' + "'" + requestpicid + "'"
 	cursor.execute(query)
@@ -442,7 +442,7 @@ def pic():
 		#import pdb; pdb.set_trace()
 
 		#return str(picarr)
-		return render_template("pic.html", picarr = picarr, albumid = albumid, username = username, album_name = album_name, album_owner = album_owner, access = access, caption = caption, login = "yes")
+		return render_template("pic.html", picarr = picarr, albumid = albumid, album_name = album_name, album_owner = album_owner, access = access, caption = caption, login = "yes")
 
 	if album_views[0][0] != "public":
 		return render_template("login.html", login = "no")
