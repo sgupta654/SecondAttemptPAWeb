@@ -5,7 +5,7 @@
   <h1>{{album_name[0][0]}}</h1>
   </div>
   <div class="text-center">
-  <h3>{{username[0][0]}}</h3>
+  <h3>{{album_owner[0][0]}}</h3>
   </div>
 
   {% if access == True %}
@@ -21,8 +21,8 @@
     {% if access == True %}
       <form action="/ilrj0i/pa2/pic" name="captionform" method="post">
         Edit Comment: <br>
-        <textarea name="caption" rows="10" cols="30">
-          Enter caption here...
+        <textarea name="caption" rows="10" cols="30" wrap="virtual">
+          Enter new caption here...
         </textarea>
         <br>
         <input type="submit">
