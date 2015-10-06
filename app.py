@@ -121,12 +121,12 @@ def userloginpost():
 	query = '''SELECT * FROM Album WHERE username=''' + "'" + username + "'"
 	cursor.execute(query)
 	albumsadd1 = cursor.fetchall()
-	albums = albums + albumsadd1
+	albums = albums + tuple(set(albumsadd1)-set(albums))
 	query =  '''SELECT * FROM Album INNER JOIN AlbumAccess ON AlbumAccess.albumid=Album.albumid WHERE AlbumAccess.username=''' + "'" + username + "'"
 	cursor.execute(query)
 	#######own albums?
 	albumsadd2 = cursor.fetchall()
-	albums = albums + albumsadd2
+	albums = albums + tuple(set(albumsadd2)-set(albums))
 	return render_template("index.html", albums = albums, username = username, login = "yes")
 
 @app.route('/ilrj0i/pa2/user', methods=['GET'])
@@ -172,7 +172,6 @@ def createaccount():
 
 
 @app.route('/ilrj0i/pa2/user/edit', methods=['GET'])
-@requires_auth
 def edituserget():
 	if 'username' in session:
 		if datetime.now() - session['lastactivity'] > timedelta(minutes=5):
@@ -191,7 +190,6 @@ def edituserget():
 	return render_template("login.html", login = "no")
 
 @app.route('/ilrj0i/pa2/user/edit', methods=['POST'])
-@requires_auth
 def edituserpost():
 	if 'username' in session:
 		if datetime.now() - session['lastactivity'] > timedelta(minutes=5):
@@ -225,7 +223,6 @@ def userloginget():
 
 
 @app.route('/ilrj0i/pa2/user/delete', methods=['POST'])
-@requires_auth
 def deleteuser():
 	if 'username' in session:
 		if datetime.now() - session['lastactivity'] > timedelta(minutes=5):
@@ -253,7 +250,6 @@ def deleteuser():
 
 
 @app.route('/ilrj0i/pa2/user/logout')
-@requires_auth
 def logout():
 	if 'username' in session:
 		#if datetime.now() - session['lastactivity'] > timedelta(minutes=5):
@@ -273,7 +269,6 @@ def logout():
 
 
 @app.route('/ilrj0i/pa2/albums')
-@requires_auth
 def albumsss():
 	if 'username' in session:
 		if datetime.now() - session['lastactivity'] > timedelta(minutes=5):
@@ -463,7 +458,6 @@ def pic():
 	#return render_template("test.html", picarr = returnpic, albumid = albumID)
 
 @app.route('/ilrj0i/pa2/albums/edit', methods=['POST'])
-@requires_auth
 def editalbums():
 	if 'username' in session:
 		if datetime.now() - session['lastactivity'] > timedelta(minutes=5):
@@ -511,7 +505,6 @@ def editalbums():
 	return render_template("login.html", login = "no")
 
 @app.route('/ilrj0i/pa2/albums/edit', methods=['GET'])
-@requires_auth
 def vieweditalbums():
 	if 'username' in session:
 		if datetime.now() - session['lastactivity'] > timedelta(minutes=5):
@@ -546,7 +539,6 @@ def secure_filename(filename):
 	return (filename.rsplit('.', 1)[0] + "_" + str(now.year) + str(now.month) + str(now.day) + "_" + str(now.hour) + str(now.minute) + str(now.second))
 
 @app.route('/ilrj0i/pa2/album/edit', methods=['POST'])
-@requires_auth
 def editalbum():
 	if 'username' in session:
 		if datetime.now() - session['lastactivity'] > timedelta(minutes=5):
@@ -628,7 +620,6 @@ def editalbum():
 		################
 
 @app.route('/ilrj0i/pa2/album/edit', methods=['GET'])
-@requires_auth
 def viewalbum():
 	if 'username' in session:
 		if datetime.now() - session['lastactivity'] > timedelta(minutes=5):
