@@ -397,6 +397,9 @@ def pic():
 	cursor.execute(query)
 	caption = cursor.fetchall
 
+	query = '''SELECT * FROM Photo WHERE picid =''' + "'" + requestpicid + "'"
+	cursor.execute(query)
+	picarr = cursor.fetchall()
 	if 'username' in session:
 		if datetime.now() - session['lastactivity'] > timedelta(minutes=5):
 			####
@@ -428,10 +431,7 @@ def pic():
 		if username == album_owner[0][0]:
 			access = True
 
-		cursor = mysql.connection.cursor()
-		query = '''SELECT * FROM Photo WHERE picid =''' + "'" + requestpicid + "'"
-		cursor.execute(query)
-		picarr = cursor.fetchall()
+		
 		#import pdb; pdb.set_trace()
 
 		#return str(picarr)
@@ -441,7 +441,7 @@ def pic():
 		return render_template("login.html", login = "no")
 
 	#return str(picarr)
-	return render_template("pic.html", picarr = picarr, albumid = albumid, album_name = album_name, username = username, album_owner = album_owner, access = access, caption = caption)
+	return render_template("pic.html", picarr = picarr, albumid = albumid, album_name = album_name, album_owner = album_owner, access = access, caption = caption, login = "no")
 	#return render_template("test.html", picarr = returnpic, albumid = albumID)
 
 @app.route('/ilrj0i/pa2/pic', methods=['POST'])
