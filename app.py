@@ -374,7 +374,7 @@ def albumfunc():
 		#query = '''SELECT Contain.*, Photo.url FROM Contain INNER JOIN Photo ON Contain.picid=Photo.picid WHERE albumid=''' + "'" + albumid + "'"
 		cursor.execute(query)
 		pics = cursor.fetchall()
-		if username == album_owner[0][0]:
+		if username == album_info[0][4]:
 			access = True
 		return render_template("album.html", pics = pics, username = username, album_info = album_info, access = access, login = "yes")
 	return render_template("album.html", pics = pics, album_info = album_info, access = access, login = "no")
