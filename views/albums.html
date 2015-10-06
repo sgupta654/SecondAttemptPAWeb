@@ -10,17 +10,21 @@
 				<input type="hidden" name="id" value="{{album[0]}}">
 				<input type="submit" value="view">
 			</form>
+		{% if login = "yes" %}
 		<td>
 			<form action="/ilrj0i/pa2/album/edit" method="get">
 				<input type="hidden" name="id" value="{{album[0]}}">
 				<input type="submit" value="edit">
 			</form>
 		</td>
+		{% endif %}
 	</tr>
 	{% endfor %}
 </table>
+{% if login = "yes" %}
 <form action="/ilrj0i/pa2/albums/edit" method="GET">
 	<input type="hidden" name="username" value="{{username}}">
 	<input type="submit" value="Edit {{username}}'s albums">
 </form>
+{% endif %}
 {% endblock %}

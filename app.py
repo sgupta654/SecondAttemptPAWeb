@@ -64,7 +64,12 @@ def main_route():
 	#return render_template("index.html", users = users)
 	#"""
 	#import pdb; pdb.set_trace()
+
 	cursor = mysql.connection.cursor()
+	query = '''SELECT * FROM Album WHERE access="public"'''
+	cursor.execute(query)
+	albums = cursor.fetchall()
+
 	if 'username' in session:
 		if datetime.now() - session['lastactivity'] > timedelta(minutes=5):
 			session.pop('username', None)
@@ -77,38 +82,15 @@ def main_route():
 			return render_template("index.html", albums = albums, login = "no")
 		session['lastactivity'] = datetime.now()
 		username = session['username']
-		cursor = mysql.connection.cursor()
-		query = '''SELECT * FROM Album WHERE access="public"'''
+		query = '''SELECT * FROM Album WHERE username=''' + "'" + username + "'"
 		cursor.execute(query)
-		albums = cursor.fetchall()
-		return render_template("index.html", albums = albums, username = username, login = "yes")
-	cursor = mysql.connection.cursor()
-	query = '''SELECT * FROM Album WHERE access="public"'''
-	cursor.execute(query)
-	albums = cursor.fetchall()
-	"""if 'username' in session:
-		if datetime.now() - session['lastactivity'] > timedelta(minutes = 5):
-			##############logout
-			logout()
-		session['lastactivity'] = datetime.now()
-		#username = session['username']
-		query =  '''SELECT * FROM Album INNER JOIN AlbumAccess ON AlbumAccess.albumid=Album.albumid WHERE AlbumAccess.username=''' + "'" + username + "'"
-		cursor.execute(query)
-	albums = cursor.fetchall()
-	return render_template("index.html", albums = albums, login = "no")"""
-
-
-	if 'username' in session:
-		if datetime.now() - session['lastactivity'] > timedelta(minutes=5):
-			##############logout
-			logout()
-		session['lastactivity'] = datetime.now()
-		username = session['username']
-		query =  '''SELECT * FROM Album INNER JOIN AlbumAccess ON AlbumAccess.albumid=Album.albumid WHERE AlbumAccess.username=''' + "'" + username + "'"
+		albumsadd1 = cursor.fetchall()
+		albums = albums + albumsadd1
+ 		query =  '''SELECT * FROM Album INNER JOIN AlbumAccess ON AlbumAccess.albumid=Album.albumid WHERE AlbumAccess.username=''' + "'" + username + "'"
 		cursor.execute(query)
 		#######own albums?
-		albumsadd = cursor.fetchall()
-		albums = albums + albumsadd
+		albumsadd2 = cursor.fetchall()
+		albums = albums + albumsadd2
 		####login yes = html will load the "logged in as" navbar
 		return render_template("index.html", albums = albums, username = username, login = "yes")
 	return render_template("index.html", albums = albums, login = "no")
@@ -132,10 +114,19 @@ def userloginpost():
 
 	session['username'] = username
 	session['lastactivity'] = datetime.now()
+	username = session['username']
 	query = '''SELECT * FROM Album WHERE access="public"'''
-	cursor = mysql.connection.cursor()
 	cursor.execute(query)
 	albums = cursor.fetchall()
+	query = '''SELECT * FROM Album WHERE username=''' + "'" + username + "'"
+	cursor.execute(query)
+	albumsadd1 = cursor.fetchall()
+	albums = albums + albumsadd1
+	query =  '''SELECT * FROM Album INNER JOIN AlbumAccess ON AlbumAccess.albumid=Album.albumid WHERE AlbumAccess.username=''' + "'" + username + "'"
+	cursor.execute(query)
+	#######own albums?
+	albumsadd2 = cursor.fetchall()
+	albums = albums + albumsadd2
 	return render_template("index.html", albums = albums, username = username, login = "yes")
 
 @app.route('/ilrj0i/pa2/user', methods=['GET'])
@@ -302,7 +293,11 @@ def albumsss():
 		cursor.execute(query)
 		albums = cursor.fetchall()
 		return render_template("albums.html", albums = albums, username = username, login = "yes")
-	return render_template("login.html", login = "no")
+	cursor = mysql.connection.cursor()
+	query = '''SELECT * FROM Album WHERE access="public"'''
+	cursor.execute(query)
+	albums = cursor.fetchall()
+	return render_template("albums.html", albums = albums, login = "no")
 
 
 @app.route('/ilrj0i/pa2/album')
