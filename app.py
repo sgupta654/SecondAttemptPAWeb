@@ -14,10 +14,10 @@ ALLOWED_EXTENSIONS = set(['jpg', 'png', 'bmp', 'gif'])
 app = Flask(__name__, template_folder='views', static_folder='images')
 mysql = MySQL()
 
-app.config['MYSQL_USER'] = 'group36'
-app.config['MYSQL_PASSWORD'] = 'GOOCH'
+app.config['MYSQL_USER'] = 'root'
+app.config['MYSQL_PASSWORD'] = 'my_password'
 app.config['MYSQL_HOST'] = 'localhost'
-app.config['MYSQL_DB'] = 'group36pa2'
+app.config['MYSQL_DB'] = 'group36'
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 mysql.init_app(app)
 
@@ -138,6 +138,8 @@ def userloginpost():
 	query = '''SELECT password FROM User WHERE username=''' + "'" +  username + "'"
 	cursor.execute(query)
 	dbpassword = cursor.fetchall()
+	for x in password:
+			x = chr((ord(x) + 7) % 3)
 	if len(dbpassword) == 0:
 		return render_template("login.html", username = "no", login = "no")
 	if dbpassword[0][0] != password:
@@ -191,6 +193,8 @@ def createaccount():
 	if password1 != password2:
 		return render_template("user.html", passnotcorrect = "no", login = "no", username = username, firstname = firstname, lastname = lastname, email = email)
 
+	for x in password1:
+			x = chr((ord(x) + 7) % 3)
 	email = request.form['email']
 	#####check if username already exists
 	cursor = mysql.connection.cursor()
@@ -253,6 +257,8 @@ def edituserpost():
 		if password1 != password2:
 			return render_template("edituser.html", login = "yes", passnotcorrect = "no", firstname = firstname, lastname = lastname, email = email)
 
+		for x in password1:
+			x = chr((ord(x) + 7) % 3)
 		email = request.form['email']
 		cursor = mysql.connection.cursor()
 		query = '''UPDATE User SET firstname=''' + "'" + firstname + "', lastname=" + "'" + lastname + "', password=" + "'" + password1 + "', email=" + "'" + email + "' WHERE username=" + "'" + username + "'"
