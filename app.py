@@ -12,10 +12,10 @@ ALLOWED_EXTENSIONS = set(['jpg', 'png', 'bmp', 'gif'])
 
 app = Flask(__name__, template_folder='views', static_folder='images')
 mysql = MySQL()
-app.config['MYSQL_USER'] = 'group36'
-app.config['MYSQL_PASSWORD'] = 'GOOCH'
+app.config['MYSQL_USER'] = 'root'
+app.config['MYSQL_PASSWORD'] = 'root'
 app.config['MYSQL_HOST'] = 'localhost'
-app.config['MYSQL_DB'] = 'group36pa2'
+app.config['MYSQL_DB'] = 'group36'
 #app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 mysql.init_app(app)
 
@@ -312,8 +312,9 @@ def albumfunc():
 	#import pdb; pdb.set_trace()
 
 
-	query = '''SELECT * FROM Photo INNER JOIN Contain ON Contain.picid=Photo.picid WHERE Contain.albumid=''' + "'" + albumid + "'"
+	#query = '''SELECT * FROM Photo INNER JOIN Contain ON Contain.picid=Photo.picid WHERE Contain.albumid=''' + "'" + albumid + "'"
 	#query = '''SELECT Contain.*, Photo.url FROM Contain INNER JOIN Photo ON Contain.picid=Photo.picid WHERE albumid=''' + "'" + albumid + "'"
+	query = '''SELECT Contain.*, Photo.url FROM table1 Contain, table2 Photo INNER JOIN Photo ON Contain.picid=Photo.picid WHERE albumid=''' + "'" + albumid + "'"
 	cursor.execute(query)
 	pics = cursor.fetchall()
 	query = '''SELECT title FROM Album WHERE albumid=''' + "'"+albumid+"'"
@@ -431,11 +432,22 @@ def pic():
 		if username == album_owner[0][0]:
 			access = True
 
+
+
+		########DANGEROUS TERRITORY##########	
+		query = '''SELECT * FROM Contain WHERE albumid=''' + "'" + albumid + "'" + ''' AND sequencenum = '(SELECT MAX(sequencenum) FROM Contain WHERE sequencenum < ''' + "'" + sequencenum + "'" +")'"
+	cursor.execute(query)
+	previous = cursor.fetchall()
+	query = '''SELECT * FROM Contain WHERE albumid=''' + "'" + albumid + "'" + ''' AND sequencenum = '(SELECT MIN(sequencenum) FROM Contain WHERE sequencenum > ''' + "'" + sequencenum + "'" +")'"
+	cursor.execute(query)
+	next = cursor.fetchall()
+
+
 		
 		#import pdb; pdb.set_trace()
 
 		#return str(picarr)
-		return render_template("pic.html", picarr = picarr, albumid = albumid, username = username, album_name = album_name, album_owner = album_owner, access = access, caption = caption, login = "yes")
+	return render_template("pic.html", picarr = picarr, albumid = albumid, username = username, album_name = album_name, album_owner = album_owner, access = access, caption = caption, login = "yes")
 
 	if album_views[0][0] != "public":
 		return render_template("login.html", login = "no")
