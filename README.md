@@ -1,5 +1,3 @@
-# pa2_ilrj0i
-
 Group Name:
         4Maize8Blue5
 
